@@ -3,6 +3,10 @@ import Wordmark from './Wordmark.astro';
 import { brand, contact, nav } from '../data/site';
 
 const ano = new Date().getFullYear();
+
+const links = [...nav, { label: 'Contato', href: '#contato' }];
+/** Duas colunas preenchidas de cima para baixo — a leitura natural de uma lista. */
+const linhas = Math.ceil(links.length / 2);
 ---
 
 <footer class="bg-ocean text-limestone">
@@ -19,27 +23,22 @@ const ano = new Date().getFullYear();
       </div>
 
       <nav aria-label="Rodapé" class="lg:pt-2">
-        <ul class="grid gap-3 sm:grid-cols-2 sm:gap-x-16 lg:grid-cols-1">
+        <ul
+          class="grid grid-flow-col gap-x-10 sm:gap-x-14"
+          style={`grid-template-rows:repeat(${linhas},auto)`}
+        >
           {
-            nav.map((item) => (
+            links.map((item) => (
               <li>
                 <a
                   href={item.href}
-                  class="font-sans text-[0.8125rem] text-limestone/65 transition-colors duration-300 hover:text-limestone"
+                  class="block py-2.5 font-sans text-[0.8125rem] text-limestone/65 transition-colors duration-300 hover:text-limestone"
                 >
                   {item.label}
                 </a>
               </li>
             ))
           }
-          <li>
-            <a
-              href="#contato"
-              class="font-sans text-[0.8125rem] text-limestone/65 transition-colors duration-300 hover:text-limestone"
-            >
-              Contato
-            </a>
-          </li>
         </ul>
       </nav>
 
@@ -48,13 +47,13 @@ const ano = new Date().getFullYear();
           {brand.founder}<br />
           <span class="text-limestone/60">{brand.role}</span>
         </p>
-        <ul class="mt-6 space-y-2">
+        <ul class="mt-5">
           <li>
             <a
               href={`https://wa.me/${contact.whatsapp}`}
               target="_blank"
               rel="noopener noreferrer"
-              class="font-sans text-[0.8125rem] text-limestone/65 transition-colors duration-300 hover:text-limestone"
+              class="block py-2.5 font-sans text-[0.8125rem] text-limestone/65 transition-colors duration-300 hover:text-limestone"
             >
               {contact.phoneDisplay}
             </a>
@@ -64,7 +63,7 @@ const ano = new Date().getFullYear();
               <li>
                 <a
                   href={`mailto:${contact.email}`}
-                  class="font-sans text-[0.8125rem] break-words text-limestone/65 transition-colors duration-300 hover:text-limestone"
+                  class="block py-2.5 font-sans text-[0.8125rem] break-words text-limestone/65 transition-colors duration-300 hover:text-limestone"
                 >
                   {contact.email}
                 </a>
@@ -76,12 +75,12 @@ const ano = new Date().getFullYear();
               href={contact.instagramUrl}
               target="_blank"
               rel="noopener noreferrer"
-              class="font-sans text-[0.8125rem] text-limestone/65 transition-colors duration-300 hover:text-limestone"
+              class="block py-2.5 font-sans text-[0.8125rem] text-limestone/65 transition-colors duration-300 hover:text-limestone"
             >
               {contact.instagramHandle}
             </a>
           </li>
-          <li class="font-sans text-[0.8125rem] text-limestone/65">{brand.location}</li>
+          <li class="py-2.5 font-sans text-[0.8125rem] text-limestone/65">{brand.location}</li>
         </ul>
       </address>
     </div>
