@@ -2,6 +2,12 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "amar-yacht-design",
   "compatibility_date": "2026-09-12",
+  // Gera o dist antes de publicar. Deixa o repositório autossuficiente: o deploy
+  // funciona mesmo que o campo "Build command" do Cloudflare esteja vazio, e
+  // `npx wrangler deploy` local nunca publica um build velho.
+  "build": {
+    "command": "npm run build"
+  },
   // Só o build estático é publicado — a raiz do repo (brand/, .git/) fica de fora.
   "assets": {
     "directory": "./dist",

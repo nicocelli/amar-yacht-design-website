@@ -228,15 +228,20 @@ na seção de contato.
 nunca vai para a CDN.
 
 ```bash
-npm run deploy      # build + wrangler deploy
+npm run deploy      # wrangler deploy (o build roda sozinho, ver abaixo)
 ```
+
+O `wrangler.jsonc` declara `build.command`, então o `wrangler deploy` gera o `dist`
+antes de publicar. Isso mantém o repositório autossuficiente: o deploy funciona
+mesmo com o campo **Build command** do Cloudflare vazio, e um deploy local nunca
+publica um build velho.
 
 Para Workers Builds (deploy automático a cada push na `main`):
 
 1. Workers & Pages → Create → Workers → conectar este repositório
-2. Build command: `npm run build`
-3. Deploy command: `npx wrangler deploy`
-4. Variável de ambiente do build: `NODE_VERSION = 22.22.3`
+2. Deploy command: `npx wrangler deploy` (o build vem junto, via `build.command`)
+3. O Node sai do `.nvmrc`; se a imagem de build ignorar, defina
+   `NODE_VERSION = 22.22.3` nas variáveis de build
 
 ### Domínio
 
