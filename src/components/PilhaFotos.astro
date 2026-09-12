@@ -49,6 +49,17 @@ const { fotos, class: className = '' } = Astro.props;
   >
     <span class="sr-only">Ver a próxima foto da coleção</span>
   </button>
+
+  {/*
+    Sem isto a pilha não anuncia que é navegável: em repouso ela parece uma foto
+    só com sombra. A pastilha pulsa até a primeira interação e então se aquieta,
+    virando apenas indicador de posição.
+  */}
+  <div class="pilha-indicador" data-indicador aria-hidden="true">
+    <span class="pilha-pastilha">
+      {fotos.map(() => <span class="pilha-ponto" />)}
+    </span>
+  </div>
 </div>
 
 <style>
@@ -90,9 +101,66 @@ const { fotos, class: className = '' } = Astro.props;
     transform: rotate(0deg) scale(1.012);
   }
 
+  .pilha-indicador {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    z-index: 60;
+    translate: -50% 50%;
+    pointer-events: none;
+  }
+
+  .pilha-pastilha {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.55rem 0.85rem;
+    border-radius: 999px;
+    background: var(--color-limestone);
+    box-shadow: 0 6px 20px -8px rgba(14, 42, 61, 0.35);
+    animation: pilha-chama 2.6s ease-in-out infinite;
+  }
+
+  .pilha-ponto {
+    display: block;
+    width: 0.3125rem;
+    height: 0.3125rem;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--color-taupe) 85%, transparent);
+    transition:
+      background-color 450ms ease,
+      width 450ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* o ponto da foto da frente vira um traço, dando o sentido de "página atual" */
+  .pilha-ponto[data-ativo] {
+    width: 1.1rem;
+    background: var(--color-ocean);
+  }
+
+  /* a pulsação para assim que a pessoa entende que a pilha é navegável */
+  .pilha-indicador[data-interagiu] .pilha-pastilha {
+    animation: none;
+  }
+
+  @keyframes pilha-chama {
+    0%,
+    100% {
+      transform: scale(1);
+      box-shadow: 0 6px 20px -8px rgba(14, 42, 61, 0.35);
+    }
+    50% {
+      transform: scale(1.06);
+      box-shadow: 0 8px 26px -8px rgba(14, 42, 61, 0.5);
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .pilha-carta {
       transition: none;
+    }
+    .pilha-pastilha {
+      animation: none;
     }
   }
 </style>
@@ -104,6 +172,8 @@ const { fotos, class: className = '' } = Astro.props;
   for (const pilha of document.querySelectorAll<HTMLElement>('[data-pilha]')) {
     const cartas = [...pilha.querySelectorAll<HTMLElement>('[data-carta]')];
     const botao = pilha.querySelector<HTMLButtonElement>('[data-pilha-avanca]');
+    const indicador = pilha.querySelector<HTMLElement>('[data-indicador]');
+    const pontos = [...pilha.querySelectorAll<HTMLElement>('.pilha-ponto')];
     if (cartas.length < 2 || !botao) continue;
 
     let topo = 0;
@@ -113,7 +183,14 @@ const { fotos, class: className = '' } = Astro.props;
       cartas.forEach((carta, i) => {
         carta.dataset.pos = String((i - topo + cartas.length) % cartas.length);
       });
+      pontos.forEach((ponto, i) => {
+        if (i === topo) ponto.setAttribute('data-ativo', '');
+        else ponto.removeAttribute('data-ativo');
+      });
     };
+
+    // a pulsação é um convite: cumprido o convite, ela some
+    const aquietar = () => indicador?.setAttribute('data-interagiu', '');
 
     const avancar = () => {
       const saindo = cartas[topo]!;
@@ -135,7 +212,10 @@ const { fotos, class: className = '' } = Astro.props;
     };
 
     pintar();
-    botao.addEventListener('click', avancar);
+    botao.addEventListener('click', () => {
+      aquietar();
+      avancar();
+    });
 
     if (!semMovimento.matches) {
       if (semHover.matches) {
@@ -146,6 +226,7 @@ const { fotos, class: className = '' } = Astro.props;
         ).observe(pilha);
       } else {
         pilha.addEventListener('pointerenter', () => {
+          aquietar();
           avancar();
           rodar(1500);
         });

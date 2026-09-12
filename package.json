@@ -23,6 +23,7 @@
   "devDependencies": {
     "@fontsource-variable/cormorant-garamond": "^5.3.0",
     "@fontsource-variable/inter": "^5.3.0",
+    "@fontsource-variable/montserrat": "^5.3.0",
     "wrangler": "^4.131.1"
   },
   "engines": {

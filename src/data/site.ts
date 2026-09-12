@@ -4,7 +4,13 @@ export const brand = {
   name: 'A·MAR Yacht Design',
   shortName: 'A·MAR',
   line: 'Interiores · Refit · Layout',
+  /** Linha de posicionamento da apresentação oficial. */
   tagline: 'Projetamos espaços a bordo que unem estética, funcionalidade e experiência.',
+  /**
+   * Frase-âncora da marca: está na bio do Instagram e fecha o post de lançamento.
+   * É o fio condutor do site — abre a página e alimenta meta description e JSON-LD.
+   */
+  ancora: 'Seu barco pode ser o seu lugar favorito.',
   signature: 'Design considerado. Experiências duradouras.',
   founder: 'Jessica Zancanella',
   role: 'Designer de Interiores',
@@ -26,10 +32,12 @@ export const contact = {
 
 export const nav = [
   { label: 'Sobre', href: '#sobre' },
-  { label: 'Projetos de interiores', href: '#interiores' },
+  { label: 'Interiores', href: '#interiores' },
   { label: 'Refit', href: '#refit' },
+  { label: 'Antes e depois', href: '#antes-depois' },
   { label: 'Método', href: '#metodo' },
-  { label: 'Parcerias', href: '#parcerias' },
+  // Parcerias fora do ar por ora; devolver esta linha reativa o link.
+  // { label: 'Parcerias', href: '#parcerias' },
 ] as const;
 
 /** As cinco frentes do projeto de interiores náuticos (deck, pág. 3). */
@@ -61,15 +69,20 @@ export const servicos = [
   },
 ] as const;
 
-/** Intervenções de refit (deck, pág. 4). */
+/**
+  * Intervenções de refit (deck, pág. 4).
+  *
+  * A lista original do deck tem dez itens. Por decisão da marca, dois saíram do
+  * site para encurtar a seção: "Renovação de estofados internos e externos"
+  * (que já é o assunto do comparador antes/depois) e "Reorganização de
+  * ambientes". Seguem valendo na apresentação.
+  */
 export const refitItems = [
-  'Renovação de estofados internos e externos',
   'Troca de revestimentos',
   'Atualização de pisos',
   'Reforma de marcenaria',
   'Modernização da iluminação',
   'Atualização de acabamentos e ferragens',
-  'Reorganização de ambientes',
   'Decoração e ambientação',
   'Revitalização estética de interiores',
   'Acompanhamento da execução',

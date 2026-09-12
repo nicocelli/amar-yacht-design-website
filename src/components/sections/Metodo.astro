@@ -1,50 +1,181 @@
 ---
 import SectionHead from '../SectionHead.astro';
 import { principios, usos } from '../../data/site';
+
+/**
+ * Método como leitura guiada pelo scroll.
+ *
+ * A coluna da esquerda fica fixa com o título e o sumário das etapas; a da
+ * direita passa etapa por etapa, e só a que está na altura da leitura fica
+ * acesa — as outras recuam. É a própria página demonstrando o argumento da
+ * seção: uma decisão de cada vez, na ordem certa.
+ *
+ * Sem JS ou com movimento reduzido, todas as etapas ficam acesas e a seção vira
+ * uma lista comum. Nada depende do efeito para ser lido.
+ */
+const etapas = [
+  {
+    id: 'uso',
+    titulo: 'Entender o uso',
+    corpo:
+      'Antes de escolher materiais ou definir acabamentos, buscamos compreender como o proprietário utiliza sua embarcação.',
+    etiquetas: usos,
+    fecho:
+      'Cada forma de viver o barco exige decisões diferentes. Por isso, nossos projetos partem de três princípios.',
+  },
+  ...principios.map((p) => ({
+    id: p.title.toLowerCase(),
+    titulo: p.title,
+    corpo: p.body,
+    etiquetas: undefined,
+    fecho: undefined,
+  })),
+];
 ---
 
-<section id="metodo" class="wrap py-section">
-  <div class="grid gap-x-16 gap-y-12 lg:grid-cols-12">
-    <SectionHead
-      eyebrow="Nossa forma de projetar"
-      title="Design que começa pela experiência."
-      class="lg:col-span-5"
-    />
+<section id="metodo" class="bg-sand/55">
+  <div class="wrap py-section">
+    <div class="lg:grid lg:grid-cols-12 lg:gap-x-16">
+      <!-- Âncora fixa -->
+      <div class="lg:col-span-5 lg:sticky lg:top-32 lg:self-start">
+        <SectionHead
+          eyebrow="Nossa forma de projetar"
+          title="Design que começa pela experiência."
+          titleClass="max-w-[14ch]"
+        />
 
-    <div class="lg:col-span-6 lg:col-start-7 lg:pt-2">
-      <p class="lede reveal">
-        Antes de escolher materiais ou definir acabamentos, buscamos compreender como o
-        proprietário utiliza sua embarcação.
-      </p>
+        <ol class="mt-12 hidden lg:block" data-sumario>
+          {
+            etapas.map((etapa, i) => (
+              <li>
+                <a
+                  href={`#metodo-${etapa.id}`}
+                  data-sumario-item={etapa.id}
+                  class="sumario-elo flex items-baseline gap-5 border-t border-taupe/40 py-4 last:border-b"
+                >
+                  <span class="eyebrow tabular-nums transition-colors duration-500">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <span class="font-display text-[1.4rem] leading-snug font-light transition-colors duration-500">
+                    {etapa.titulo}
+                  </span>
+                </a>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
 
-      <ul class="reveal mt-10 flex flex-wrap gap-x-3 gap-y-3" style="--reveal-delay:120ms">
+      <!-- Etapas -->
+      <div class="mt-16 lg:col-span-6 lg:col-start-7 lg:mt-0" data-etapas>
         {
-          usos.map((uso) => (
-            <li class="rounded-full border border-taupe/50 px-4 py-2 font-sans text-[0.8125rem] text-graphite/80">
-              {uso}
-            </li>
+          etapas.map((etapa, i) => (
+            <article
+              id={`metodo-${etapa.id}`}
+              data-etapa={etapa.id}
+              class="etapa flex min-h-[58svh] scroll-mt-32 flex-col justify-center border-t border-taupe/40 py-12 first:border-t-0 lg:border-0 lg:py-0"
+            >
+              <span class="eyebrow tabular-nums text-ocean/45">{String(i + 1).padStart(2, '0')}</span>
+              <h3 class="display-md mt-5 max-w-[16ch]">{etapa.titulo}</h3>
+              <p class="mt-5 max-w-[46ch] text-[1.0625rem] leading-relaxed text-graphite/85">
+                {etapa.corpo}
+              </p>
+
+              {etapa.etiquetas && (
+                <ul class="mt-7 flex max-w-[42ch] flex-wrap gap-x-3 gap-y-3">
+                  {etapa.etiquetas.map((etiqueta) => (
+                    <li class="rounded-full border border-taupe/50 px-4 py-2 font-sans text-[0.8125rem] text-graphite/80">
+                      {etiqueta}
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              {etapa.fecho && (
+                <p class="mt-7 max-w-[42ch] font-display text-[1.35rem] leading-snug font-light text-ocean">
+                  {etapa.fecho}
+                </p>
+              )}
+            </article>
           ))
         }
-      </ul>
+      </div>
     </div>
-  </div>
 
-  <div class="mt-24 lg:mt-28">
-    <p class="display-md reveal max-w-[34ch] text-ocean">
-      Cada forma de viver o barco exige decisões diferentes. Por isso, nossos projetos partem de
-      três princípios.
+    <p class="lede reveal mt-20 max-w-[52ch] lg:mt-24">
+      Quando o projeto está bem resolvido, você sente antes de conseguir explicar. Talvez o
+      verdadeiro luxo esteja aí: em estar bem no espaço sem precisar pensar sobre ele.
     </p>
-
-    <ol class="mt-14 grid gap-x-12 gap-y-14 sm:grid-cols-3">
-      {
-        principios.map((p, i) => (
-          <li class="reveal rule-t pt-8" style={`--reveal-delay:${i * 110}ms`}>
-            <span class="eyebrow text-ocean/45 tabular-nums">{String(i + 1).padStart(2, '0')}</span>
-            <h3 class="display-md mt-5">{p.title}</h3>
-            <p class="mt-4 text-[0.9375rem] leading-relaxed text-graphite/80">{p.body}</p>
-          </li>
-        ))
-      }
-    </ol>
   </div>
 </section>
+
+<style>
+  /* O recuo das etapas inativas só existe com JS: sem ele, tudo fica legível. */
+  html.js .etapa {
+    transition:
+      opacity 600ms ease,
+      transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @media (min-width: 64rem) {
+    html.js .etapa:not([data-ativa]) {
+      opacity: 0.28;
+      transform: translateY(0.5rem);
+    }
+  }
+
+  .sumario-elo .eyebrow {
+    color: color-mix(in oklab, var(--color-ink-muted) 70%, transparent);
+  }
+  .sumario-elo span:last-child {
+    color: color-mix(in oklab, var(--color-ocean) 40%, transparent);
+  }
+  .sumario-elo[data-ativa] .eyebrow {
+    color: var(--color-ocean);
+  }
+  .sumario-elo[data-ativa] span:last-child {
+    color: var(--color-ocean);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html.js .etapa {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const secao = document.getElementById('metodo');
+  if (secao) {
+    const etapas = [...secao.querySelectorAll<HTMLElement>('[data-etapa]')];
+    const elos = [...secao.querySelectorAll<HTMLElement>('[data-sumario-item]')];
+    const semMovimento = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    const acender = (id: string) => {
+      for (const etapa of etapas) etapa.toggleAttribute('data-ativa', etapa.dataset.etapa === id);
+      for (const elo of elos) elo.toggleAttribute('data-ativa', elo.dataset.sumarioItem === id);
+    };
+
+    if (semMovimento.matches || !('IntersectionObserver' in window)) {
+      // sem o efeito, tudo fica aceso: destacar só uma etapa no sumário mentiria
+      etapas.forEach((e) => e.setAttribute('data-ativa', ''));
+      elos.forEach((e) => e.setAttribute('data-ativa', ''));
+    } else {
+      acender(etapas[0]?.dataset.etapa ?? '');
+
+      // faixa estreita no meio da tela: a etapa que a cruza é a que está sendo lida
+      const observador = new IntersectionObserver(
+        (entradas) => {
+          for (const entrada of entradas) {
+            if (entrada.isIntersecting) acender((entrada.target as HTMLElement).dataset.etapa!);
+          }
+        },
+        { rootMargin: '-45% 0px -45% 0px', threshold: 0 },
+      );
+
+      etapas.forEach((etapa) => observador.observe(etapa));
+    }
+  }
+</script>

@@ -80,22 +80,41 @@ simples, que não têm canto nenhum.
 O `:focus-visible` não fixa `border-radius`: o contorno acompanha o raio do próprio
 elemento, então o foco fica arredondado junto.
 
-### Tipografia — substituições temporárias
+### Tipografia
 
-A identidade especifica **Canela** (serif) e **Suisse International** (sans). As duas são
-comerciais e **não há licença web contratada**. O site roda hoje com substitutas livres de
-proporção e contraste equivalentes:
+A identidade aplicada (papelaria no Canva) usa **The Seasons** no display e
+**Montserrat** no texto.
 
-| Papel | Especificado | Em uso |
+| Papel | Marca | No site |
 |---|---|---|
-| Display | Canela | Cormorant Garamond Variable |
-| Texto/UI | Suisse International | Inter Variable |
+| Display | The Seasons | Cormorant Garamond Variable (substituta) |
+| Texto e UI | Montserrat | **Montserrat Variable** (a mesma da marca) |
 
-Ao adquirir as licenças web, a troca é feita em **um lugar só**: os `@font-face` e as variáveis
-`--font-display` / `--font-sans` no topo de `src/styles/global.css`.
+Montserrat é livre e está aqui idêntica à da papelaria. The Seasons é comercial
+(Nicky Laatz) e não tem licença web contratada; ao licenciar, a troca é só no
+`@font-face` e na variável `--font-display`, no topo de `src/styles/global.css`.
 
-> Cormorant desenha diacríticos bem altos. O entrelinhamento dos utilitários `display-*` já está
-> calibrado para isso — em português, apertar mais faz o acento encostar na linha de cima.
+> Cormorant desenha diacríticos bem altos. O entrelinhamento dos utilitários
+> `display-*` já está calibrado para isso — em português, apertar mais faz o
+> acento encostar na linha de cima.
+
+### O lockup e sua escala óptica
+
+`Wordmark.astro` deriva tudo de um único tamanho-base, nas proporções medidas na
+papelaria: o subtítulo é **0,185 do corpo do nome**, e o espaçamento entre letras
+é aberto até as duas linhas terminarem na mesma largura (**0,88 da largura do
+nome**). A terceira linha, quando existe, corre na largura cheia do "A·MAR" e
+fica à mesma distância do ponto que o subtítulo — o ponto é o eixo.
+
+A proporção literal, porém, só funciona grande: aplicada à barra de navegação
+daria 4,9px de "YACHT DESIGN". Por isso a razão **abre** conforme o lockup
+encolhe (0,185 → 0,28) e o espaçamento **fecha** na mesma medida, mantendo os
+0,88 em todos os tamanhos. Os valores estão no mapa `escalaSub`.
+
+Duas armadilhas registradas ali: `margin-top` sempre resolve contra o corpo do
+próprio elemento, nunca o do pai — por isso o vão até o nome é uma variável por
+tamanho. E a terceira linha, por ser irmã do lockup e não filha, precisa da
+margem em `vw`, não em `em`.
 
 ## Fotografia
 
@@ -132,7 +151,54 @@ entra só onde tem função — provar o refit e ambientar a abertura.
 Não há mais slots vazios. O `<PhotoSlot>` segue disponível para áreas novas: sem `src`,
 ele desenha um campo de cor da paleta com a legenda do enquadramento desejado.
 
-## Faixa de marcas
+## Assinatura de marca
+
+`Assinatura.astro` fecha a narrativa do método. A seção é alta e o conteúdo fica
+fixo no meio dela; enquanto ela atravessa a tela, a fotografia surge, a marca
+surge sobre ela, a fotografia se dissolve no azul deixando o lockup sozinho, e
+por fim o lockup também parte.
+
+O script apenas mede a rolagem e escreve duas variáveis CSS (`--pf` para a foto,
+`--pm` para a marca) — todo o efeito é CSS. Ele só escuta o scroll enquanto a
+seção está por perto. Com `prefers-reduced-motion` ou sem JS, a cena aparece
+inteira e estática.
+
+A foto é um retrato 2:3: telas largas e estreitas recortam regiões muito
+diferentes, então o `object-position` é separado por breakpoint para o iate e o
+horizonte caírem sempre abaixo do lockup.
+
+## Linha editorial
+
+O texto do site vem de duas fontes, nessa ordem de autoridade:
+
+1. **Apresentação oficial da marca** (`brand/`) — define posicionamento, os cinco serviços,
+   a lista de refit, os três princípios e a rede de parceiros. Texto preservado literalmente.
+2. **Feed do Instagram** (@amaryachtdesign, 16 posts analisados) — define a frase-âncora,
+   o gatilho do cliente e o território próprio da marca.
+
+A voz é **"nós"**, por fidelidade à apresentação. O feed usa primeira pessoa do singular
+("eu penso", "para mim"); essa divergência é deliberada e foi decidida pela marca.
+
+**Frase-âncora:** "Seu barco pode ser o seu lugar favorito." Está na bio do Instagram e fecha
+o post de lançamento. É o fio condutor: abre a página, alimenta a meta description, o slogan
+do JSON-LD e a imagem de compartilhamento. Vive em `brand.ancora` (`src/data/site.ts`).
+
+Princípios vindos da análise do feed, a manter em qualquer texto novo:
+
+- Abrir pelo problema ou pelo uso, nunca pela solução ou pelo material
+- Vocabulário de sensação: conforto, leveza, acolher, fazer sentido, viver a bordo, durar
+- Luxo reenquadrado como "funcionar bem", nunca como caro
+- Sem linguagem de venda agressiva, urgência, preço em destaque ou exclamação
+- Grafia sempre **A·MAR**, com ponto médio
+
+## Seções fora do ar
+
+`Parcerias` e `Marcas` (a esteira de estaleiros) estão desativadas por decisão da
+marca. Os componentes seguem no projeto: para reativar, descomente as duas
+chamadas em `src/pages/index.astro`, os dois imports no topo do arquivo e a
+entrada de Parcerias em `nav` (`src/data/site.ts`).
+
+## Faixa de marcas (desativada)
 
 A seção `Marcas.astro` é uma esteira contínua com nomes de estaleiros, definida em
 `marcasNauticas` (`src/data/site.ts`).

@@ -5,17 +5,16 @@ import { servicos } from '../../data/site';
 
 <section id="interiores" class="bg-sand/55">
   <div class="wrap py-section">
-    <div class="grid gap-x-16 gap-y-10 lg:grid-cols-12">
-      <SectionHead
-        eyebrow="Projetos de interiores náuticos"
-        title="Soluções personalizadas para dentro e fora da embarcação."
-        class="lg:col-span-6"
-      />
-      <p class="reveal text-graphite/85 lg:col-span-5 lg:col-start-8 lg:pt-3">
+    <SectionHead
+      eyebrow="Projetos de interiores náuticos"
+      title="Soluções personalizadas para dentro e fora da embarcação."
+      titleClass="max-w-[24ch]"
+    >
+      <p class="mt-7 max-w-[62ch] text-[0.9375rem] leading-relaxed text-graphite/70">
         Desenvolvimento de soluções personalizadas para ambientes internos e externos da
         embarcação. São cinco frentes que se articulam em um único projeto.
       </p>
-    </div>
+    </SectionHead>
 
     <ol class="mt-20 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
       {

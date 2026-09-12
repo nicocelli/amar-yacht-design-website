@@ -4,10 +4,18 @@ interface Props {
   title: string;
   /** Cor do bloco: claro (padrão) ou sobre fundo escuro. */
   tone?: 'light' | 'dark';
+  /** Medida do título. Mais largo = título maior em relação à coluna. */
+  titleClass?: string;
   class?: string;
 }
 
-const { eyebrow, title, tone = 'light', class: className = '' } = Astro.props;
+const {
+  eyebrow,
+  title,
+  tone = 'light',
+  titleClass = 'max-w-[18ch]',
+  class: className = '',
+} = Astro.props;
 ---
 
 <div class:list={['reveal', className]}>
@@ -24,7 +32,7 @@ const { eyebrow, title, tone = 'light', class: className = '' } = Astro.props;
   </p>
 
   <h2
-    class:list={['display-lg mt-6 max-w-[18ch]', tone === 'dark' ? 'text-limestone' : 'text-ocean']}
+    class:list={['display-lg mt-6', titleClass, tone === 'dark' ? 'text-limestone' : 'text-ocean']}
   >
     {title}
   </h2>

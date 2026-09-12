@@ -1,0 +1,158 @@
+---
+import { Image } from 'astro:assets';
+import Wordmark from '../Wordmark.astro';
+import { brand } from '../../data/site';
+// PROVISÓRIA: banco de imagens (licença Pexels). Trocar por foto própria da A·MAR.
+import crepusculo from '../../assets/assinatura-crepusculo.jpg';
+
+/**
+ * Respiro de marca que fecha a narrativa do método.
+ *
+ * A seção é alta e o conteúdo fica fixo no meio dela. Enquanto ela atravessa a
+ * tela, três coisas acontecem em sequência: a fotografia surge, a marca surge
+ * sobre ela, e então a fotografia se dissolve no azul da marca — deixando o
+ * lockup sozinho antes de ele também partir.
+ *
+ * O script só mede a rolagem e escreve duas variáveis (--pf para a foto, --pm
+ * para a marca); o resto é CSS. Com movimento reduzido ou sem JS, as duas ficam
+ * em 1 e a cena aparece inteira e estática.
+ */
+---
+
+<section class="assinatura relative bg-ocean text-limestone" data-assinatura aria-label={brand.name}>
+  <div class="sticky top-0 h-svh overflow-hidden">
+    <div class="assinatura-foto absolute inset-0">
+      <Image
+        src={crepusculo}
+        alt=""
+        widths={[900, 1440, 1920, 2400]}
+        sizes="100vw"
+        loading="lazy"
+        decoding="async"
+        class="size-full object-cover"
+      />
+      {/*
+        Véu em degradê: mais denso na faixa central, onde o lockup precisa de
+        contraste, e leve nas pontas, para a fotografia não virar um azul chapado.
+      */}
+      <div
+        class="absolute inset-0"
+        style="background:linear-gradient(to bottom, color-mix(in oklab, var(--color-ocean) 30%, transparent) 0%, color-mix(in oklab, var(--color-ocean) 52%, transparent) 42%, color-mix(in oklab, var(--color-ocean) 40%, transparent) 72%, color-mix(in oklab, var(--color-ocean) 18%, transparent) 100%)"
+      >
+      </div>
+    </div>
+
+    <div class="assinatura-alvo relative flex h-full flex-col items-center justify-center text-center">
+      <Wordmark size="xl" tone="limestone" dot />
+
+      {/*
+        A terceira linha corre na mesma largura do "A·MAR", e fica à mesma
+        distância do ponto que o "Yacht Design" — o ponto é o eixo da composição.
+        A margem não pode ser em `em`: resolveria contra o corpo da própria
+        linha, não contra o do lockup.
+      */}
+      <p
+        class="font-sans font-normal text-limestone/75"
+        style="font-size:clamp(0.6rem,1.95vw,1.72rem);letter-spacing:0.42em;text-indent:0.42em;line-height:1;margin-top:clamp(1.3rem,5.11vw,4.5rem)"
+      >
+        {brand.line}
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .assinatura {
+    /* altura extra: é a distância de rolagem que a cena tem para acontecer */
+    height: 240svh;
+  }
+
+  /* A foto é um retrato 2:3: telas largas e estreitas recortam regiões muito
+     diferentes, então cada uma precisa do seu ponto de ancoragem para o iate e
+     o horizonte caírem abaixo do lockup. */
+  .assinatura-foto img {
+    object-position: center 63%;
+  }
+
+  @media (min-width: 64rem) {
+    .assinatura-foto img {
+      object-position: center 72%;
+    }
+  }
+
+  .assinatura-foto {
+    --pf: 1;
+    opacity: var(--pf);
+    /* recuo leve conforme entra, para a foto ter profundidade */
+    scale: calc(1.12 - 0.12 * var(--pf));
+    will-change: opacity, scale;
+  }
+
+  .assinatura-alvo {
+    --pm: 1;
+    opacity: var(--pm);
+    scale: calc(0.97 + 0.03 * var(--pm));
+    will-change: opacity, scale;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .assinatura-foto,
+    .assinatura-alvo {
+      opacity: 1;
+      scale: 1;
+    }
+  }
+</style>
+
+<script>
+  const secao = document.querySelector<HTMLElement>('[data-assinatura]');
+  const foto = secao?.querySelector<HTMLElement>('.assinatura-foto');
+  const alvo = secao?.querySelector<HTMLElement>('.assinatura-alvo');
+  const semMovimento = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  if (secao && foto && alvo && !semMovimento.matches) {
+    let pendente = false;
+
+    /** rampa linear entre dois pontos do percurso, limitada a 0..1 */
+    const rampa = (valor: number, de: number, ate: number) =>
+      Math.min(Math.max((valor - de) / (ate - de), 0), 1);
+
+    const medir = () => {
+      pendente = false;
+      const caixa = secao.getBoundingClientRect();
+      const percurso = caixa.height - window.innerHeight;
+      if (percurso <= 0) return;
+
+      const avanco = Math.min(Math.max(-caixa.top / percurso, 0), 1);
+
+      // foto: entra cedo, se sustenta, e se dissolve antes da marca
+      const pf = Math.min(rampa(avanco, 0, 0.2), 1 - rampa(avanco, 0.52, 0.78));
+      // marca: entra logo depois da foto e é a última a partir
+      const pm = Math.min(rampa(avanco, 0.08, 0.28), 1 - rampa(avanco, 0.84, 1));
+
+      foto.style.setProperty('--pf', pf.toFixed(3));
+      alvo.style.setProperty('--pm', pm.toFixed(3));
+    };
+
+    const agendar = () => {
+      if (pendente) return;
+      pendente = true;
+      requestAnimationFrame(medir);
+    };
+
+    // só escuta a rolagem enquanto a seção está por perto
+    new IntersectionObserver(
+      ([entrada]) => {
+        if (entrada!.isIntersecting) {
+          window.addEventListener('scroll', agendar, { passive: true });
+          window.addEventListener('resize', agendar);
+          medir();
+        } else {
+          window.removeEventListener('scroll', agendar);
+          window.removeEventListener('resize', agendar);
+        }
+      },
+      { rootMargin: '150px' },
+    ).observe(secao);
+  }
+</script>

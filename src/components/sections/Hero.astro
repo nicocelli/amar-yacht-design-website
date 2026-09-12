@@ -1,5 +1,4 @@
 ---
-import Wordmark from '../Wordmark.astro';
 import PilhaFotos from '../PilhaFotos.astro';
 import { brand, contact } from '../../data/site';
 
@@ -25,7 +24,7 @@ const colecao = [
 ---
 
 <section id="topo" class="relative flex min-h-svh flex-col">
-  <div class="wrap flex flex-1 flex-col justify-center pt-32 pb-16 lg:pt-36 lg:pb-20">
+  <div class="wrap flex flex-1 flex-col justify-center pt-28 pb-16 lg:pt-14 lg:pb-32">
     {/*
       A pilha é irmã do bloco de texto num flex com items-stretch: em vez de receber
       uma altura fixa, ela herda a do texto. Assim vai exatamente do topo da marca
@@ -33,34 +32,20 @@ const colecao = [
     */}
     <div class="flex flex-col gap-y-14 lg:flex-row lg:items-stretch lg:gap-x-14">
       <div class="lg:flex-1">
-        <div class="reveal">
-          <Wordmark size="lg" class="items-start! text-left" />
-        </div>
-
-        <p
-          class="eyebrow reveal mt-8 text-graphite/70"
-          style="--reveal-delay:120ms;letter-spacing:0.3em"
-        >
-          Interiores · Refit · Layout
-        </p>
-
         <h1
-          class="display-lg reveal mt-7 max-w-[19ch] text-[clamp(2.25rem,4.4vw,3.6rem)]"
-          style="--reveal-delay:200ms"
+          class="display-lg reveal max-w-[15ch] text-[clamp(2.75rem,6.4vw,5.25rem)]"
+          style="--reveal-delay:60ms"
         >
-          Projetamos espaços a bordo que unem estética, funcionalidade e experiência.
+          Seu barco pode ser o seu lugar favorito.
         </h1>
 
-        <p
-          class="reveal mt-7 max-w-[46ch] text-[1.0625rem] leading-relaxed text-graphite/85"
-          style="--reveal-delay:280ms"
-        >
-          Estúdio de design especializado em interiores náuticos, projetos e refit de embarcações.
+        <p class="lede reveal mt-8 max-w-[34ch]" style="--reveal-delay:180ms">
+          Projetamos espaços a bordo que unem estética, funcionalidade e experiência.
         </p>
 
         <div
           class="reveal mt-10 flex flex-wrap items-center gap-x-8 gap-y-4"
-          style="--reveal-delay:360ms"
+          style="--reveal-delay:340ms"
         >
           <a
             href="#contato"

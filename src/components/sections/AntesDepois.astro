@@ -49,26 +49,22 @@ const ambientes = [
 ---
 
 <section id="antes-depois" class="wrap py-section">
-  <div class="grid gap-x-16 gap-y-10 lg:grid-cols-12">
-    <SectionHead
-      eyebrow="Antes e depois"
-      title="O mesmo barco, outra forma de viver a bordo."
-      class="lg:col-span-6"
-    />
-
-    <div class="reveal lg:col-span-5 lg:col-start-8 lg:pt-3">
-      <p class="text-graphite/85">
-        Nenhuma mudança na estrutura ou no layout da embarcação. O que muda é a estofaria, o piso e
-        a ambientação. Decisões de superfície que reescrevem a percepção do espaço inteiro.
-      </p>
-      <p class="eyebrow mt-6 flex items-center gap-3">
-        <svg width="22" height="10" viewBox="0 0 22 10" fill="none" aria-hidden="true">
-          <path d="M8 1L4 5l4 4M14 1l4 4-4 4" stroke="currentColor" stroke-width="1.25"></path>
-        </svg>
-        Arraste para comparar
-      </p>
-    </div>
-  </div>
+  <SectionHead
+    eyebrow="Antes e depois"
+    title="O mesmo barco, outra forma de viver a bordo."
+    titleClass="max-w-[22ch]"
+  >
+    <p class="mt-7 max-w-[62ch] text-[0.9375rem] leading-relaxed text-graphite/70">
+      Nenhuma mudança na estrutura ou no layout da embarcação. O que muda é a estofaria, o piso e a
+      ambientação. Decisões de superfície que reescrevem a percepção do espaço inteiro.
+    </p>
+    <p class="eyebrow mt-7 flex items-center gap-3">
+      <svg width="22" height="10" viewBox="0 0 22 10" fill="none" aria-hidden="true">
+        <path d="M8 1L4 5l4 4M14 1l4 4-4 4" stroke="currentColor" stroke-width="1.25"></path>
+      </svg>
+      Arraste para comparar
+    </p>
+  </SectionHead>
 
   <div class="mt-16 grid max-w-5xl gap-x-10 gap-y-14 lg:mt-20 lg:grid-cols-2">
     {

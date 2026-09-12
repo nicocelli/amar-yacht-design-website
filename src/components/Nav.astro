@@ -23,7 +23,8 @@ const waHref = `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(
             <li>
               <a
                 href={item.href}
-                class="font-sans text-[0.8125rem] text-graphite/80 transition-colors duration-300 hover:text-ocean"
+                data-secao={item.href.slice(1)}
+                class="nav-link font-sans text-[0.8125rem] text-graphite/80 transition-colors duration-300 hover:text-ocean"
               >
                 {item.label}
               </a>
@@ -65,6 +66,50 @@ const waHref = `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(
     </div>
   </div>
 
+  <style>
+    /* Filete que cresce da esquerda sob o link da seção em que o leitor está. */
+    .nav-link {
+      position: relative;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      inset-inline: 0;
+      bottom: -0.4rem;
+      height: 1px;
+      background: currentColor;
+      transform: scaleX(0);
+      transform-origin: left center;
+      transition: transform 450ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .nav-link[data-ativo] {
+      color: var(--color-ocean);
+    }
+    .nav-link[data-ativo]::after {
+      transform: scaleX(1);
+    }
+
+    /* No menu mobile o marcador é o ponto da marca, que aparece no link ativo. */
+    .nav-link-mobile .ponto-secao {
+      opacity: 0;
+      transform: scale(0.4);
+      transition:
+        opacity 300ms ease,
+        transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .nav-link-mobile[data-ativo] .ponto-secao {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .nav-link::after,
+      .nav-link-mobile .ponto-secao {
+        transition: none;
+      }
+    }
+  </style>
+
   <!-- Menu mobile -->
   <div
     id="nav-drawer"
@@ -78,8 +123,10 @@ const waHref = `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(
             <a
               href={item.href}
               data-nav-link
-              class="block py-4 font-display text-2xl font-light text-ocean"
+              data-secao={item.href.slice(1)}
+              class="nav-link-mobile flex items-center gap-3 py-4 font-display text-2xl font-light text-ocean"
             >
+              <span class="ponto-secao block size-1 shrink-0 rounded-full bg-ocean" aria-hidden="true"></span>
               {item.label}
             </a>
           </li>
@@ -125,6 +172,49 @@ const waHref = `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(
   };
 
   toggle.addEventListener('click', () => setOpen(drawer.hidden));
+
+  // --- Indicador de seção ------------------------------------------------
+  // Uma faixa fina logo abaixo da barra funciona como linha de leitura: a seção
+  // que a cruza é a que está sendo lida. Usar a seção "mais visível" falharia com
+  // seções muito mais altas que a viewport, que nunca ficam inteiras na tela.
+  const elos = new Map<string, HTMLElement[]>();
+  for (const elo of document.querySelectorAll<HTMLElement>('[data-secao]')) {
+    const id = elo.dataset.secao!;
+    elos.set(id, [...(elos.get(id) ?? []), elo]);
+  }
+
+  const marcar = (id: string | null) => {
+    for (const [secao, lista] of elos) {
+      for (const elo of lista) {
+        if (secao === id) elo.setAttribute('data-ativo', '');
+        else elo.removeAttribute('data-ativo');
+      }
+    }
+  };
+
+  const secoes = [...elos.keys()]
+    .map((id) => document.getElementById(id))
+    .filter((el): el is HTMLElement => el !== null);
+
+  if (secoes.length) {
+    const visiveis = new Set<string>();
+    const ordem = secoes.map((s) => s.id);
+
+    const observador = new IntersectionObserver(
+      (entradas) => {
+        for (const entrada of entradas) {
+          if (entrada.isIntersecting) visiveis.add(entrada.target.id);
+          else visiveis.delete(entrada.target.id);
+        }
+        // com mais de uma cruzando a faixa, vale a que está mais adiante na página
+        const ativa = ordem.filter((id) => visiveis.has(id)).pop() ?? null;
+        marcar(ativa);
+      },
+      { rootMargin: '-88px 0px -55% 0px', threshold: 0 },
+    );
+
+    secoes.forEach((secao) => observador.observe(secao));
+  }
   drawer.querySelectorAll('[data-nav-link]').forEach((a) => {
     a.addEventListener('click', () => setOpen(false));
   });

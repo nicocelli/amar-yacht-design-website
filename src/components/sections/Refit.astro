@@ -7,7 +7,7 @@ import { refitItems } from '../../data/site';
 ---
 
 <section id="refit" class="bg-ocean text-limestone">
-  <div class="wrap py-section">
+  <div class="wrap py-24 lg:py-28">
     <div class="grid gap-x-16 gap-y-14 lg:grid-cols-12">
       <div class="lg:col-span-5">
         <SectionHead
@@ -17,12 +17,12 @@ import { refitItems } from '../../data/site';
         />
 
         <p class="reveal mt-8 max-w-[44ch] text-limestone/85" style="--reveal-delay:100ms">
-          Um projeto de refit pode transformar completamente a percepção de um barco existente. A
-          A·MAR desenvolve soluções para reformas completas ou intervenções pontuais.
+          Muitas vezes o barco não ficou ruim. Ele deixou de acompanhar a forma como você vive
+          hoje. A A·MAR desenvolve desde reformas completas até intervenções pontuais.
         </p>
 
         <PhotoSlot
-          class="reveal mt-12 aspect-[3/4] lg:mt-14"
+          class="reveal mt-10 aspect-[3/2] lg:mt-12"
           src={detalheTeca}
           alt="Escada em teca vista de cima, com acabamento náutico em réguas claras."
           sizes="(min-width: 1024px) 38vw, 92vw"
@@ -34,7 +34,7 @@ import { refitItems } from '../../data/site';
           {
             refitItems.map((item, i) => (
               <li
-                class="reveal group flex items-baseline gap-5 border-b border-limestone/15 py-5 last:border-0"
+                class="reveal group flex items-baseline gap-5 border-b border-limestone/15 py-4 last:border-0"
                 style={`--reveal-delay:${Math.min(i, 6) * 60}ms`}
               >
                 <span class="eyebrow w-6 shrink-0 text-sage/70 tabular-nums">
@@ -48,9 +48,10 @@ import { refitItems } from '../../data/site';
           }
         </ul>
 
-        <p class="reveal mt-12 max-w-[52ch] border-t border-limestone/20 pt-8 text-[0.9375rem] leading-relaxed text-limestone/80">
+        <p class="reveal mt-10 max-w-[52ch] border-t border-limestone/20 pt-7 text-[0.9375rem] leading-relaxed text-limestone/80">
           Cada intervenção é pensada considerando as características técnicas da embarcação e o
-          resultado desejado pelo proprietário.
+          resultado desejado pelo proprietário. Por isso, antes de perguntar o que vamos trocar,
+          costumamos perguntar o que vale a pena manter.
         </p>
       </div>
     </div>

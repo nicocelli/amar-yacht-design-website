@@ -27,9 +27,8 @@ const jsonLd = {
   name: brand.name,
   alternateName: brand.shortName,
   url: SITE_URL,
-  description:
-    'Estúdio de design especializado em interiores náuticos, projetos e refit de embarcações.',
-  slogan: brand.tagline,
+  description: `${brand.tagline} Estúdio de design especializado em interiores náuticos, projetos e refit de embarcações.`,
+  slogan: brand.ancora,
   image: ogUrl,
   telephone: contact.phoneHref,
   areaServed: { '@type': 'Country', name: 'Brasil' },
@@ -88,7 +87,7 @@ const jsonLd = {
     />
     <link
       rel="preload"
-      href="/fonts/inter-latin-wght-normal.woff2"
+      href="/fonts/montserrat-latin-wght-normal.woff2"
       as="font"
       type="font/woff2"
       crossorigin

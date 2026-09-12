@@ -1,67 +1,115 @@
 ---
 /**
- * Lockup A·MAR — reproduz a marca da papelaria em texto real (acessível,
- * selecionável e nítido em qualquer densidade de tela).
+ * Lockup A·MAR — em texto real, acessível e nítido em qualquer densidade.
+ *
+ * Todas as proporções internas são em `em` a partir de um único tamanho-base,
+ * calcadas na papelaria: o subtítulo é 0.185 do nome, e o espaçamento entre
+ * letras é aberto o bastante para as duas linhas terminarem quase na mesma
+ * largura. Mudar `size` reescala o conjunto sem desalinhar nada.
  */
 interface Props {
-  size?: 'sm' | 'md' | 'lg';
-  /** Cor do lockup. 'ocean' sobre fundos claros, 'limestone' sobre fundos escuros. */
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  /** Cor do lockup. 'ocean' sobre fundos claros, 'limestone' sobre escuros. */
   tone?: 'ocean' | 'limestone';
-  /** Mostra a linha "YACHT DESIGN" abaixo do nome. */
   subtitle?: boolean;
   /** Mostra o ponto da marca abaixo do lockup. */
   dot?: boolean;
   class?: string;
 }
 
-const {
-  size = 'md',
-  tone = 'ocean',
-  subtitle = true,
-  dot = false,
-  class: className = '',
-} = Astro.props;
+const { size = 'md', tone = 'ocean', subtitle = true, dot = false, class: className = '' } =
+  Astro.props;
 
-const nameSize = {
-  sm: 'text-[1.35rem]',
-  md: 'text-[1.75rem] sm:text-[2rem]',
-  lg: 'text-[clamp(2.5rem,5.6vw,4rem)]',
+/** Tamanho-base: é o corpo do "A·MAR"; todo o resto deriva daqui. */
+const base = {
+  sm: '1.65rem',
+  md: 'clamp(2.1rem, 3vw, 2.4rem)',
+  lg: 'clamp(2.75rem, 6vw, 4.5rem)',
+  xl: 'clamp(3.25rem, 13vw, 11.5rem)',
 }[size];
 
-const subSize = {
-  sm: 'text-[0.5rem]',
-  md: 'text-[0.5625rem] sm:text-[0.625rem]',
-  lg: 'text-[clamp(0.625rem,1.1vw,0.875rem)]',
+/**
+ * Escala óptica do subtítulo.
+ *
+ * Na papelaria ele é 0.185 do nome — proporção que funciona impressa e no
+ * lockup grande. Aplicada à barra de navegação, daria 4,9px: ilegível. Então a
+ * proporção abre conforme o lockup encolhe, e o espaçamento entre letras fecha
+ * na mesma medida, para as duas linhas continuarem terminando juntas (~0.88 da
+ * largura do nome) em todos os tamanhos.
+ */
+const escalaSub = {
+  // `topo` está em em do próprio subtítulo: equivale sempre a 0.13em do nome,
+  // então o vão até o "A·MAR" fica igual em qualquer tamanho.
+  sm: { corpo: '0.28em', entre: '0.256em', topo: '0.464em' },
+  md: { corpo: '0.24em', entre: '0.408em', topo: '0.542em' },
+  lg: { corpo: '0.2em', entre: '0.62em', topo: '0.65em' },
+  xl: { corpo: '0.165em', entre: '0.85em', topo: '0.788em' },
 }[size];
 
 const toneClass = tone === 'ocean' ? 'text-ocean' : 'text-limestone';
-const subToneClass = tone === 'ocean' ? 'text-graphite/70' : 'text-limestone/70';
 ---
 
-<span class:list={['inline-flex flex-col items-center leading-none', toneClass, className]}>
-  <span class:list={['font-display font-light', nameSize]} style="letter-spacing:0.06em">
-    A<span class="px-[0.12em] align-middle text-[0.72em]">·</span>MAR
-  </span>
-  {
-    subtitle && (
-      <span
-        class:list={['font-sans font-normal uppercase mt-[0.55em]', subSize, subToneClass]}
-        style="letter-spacing:0.46em;text-indent:0.46em"
-      >
-        Yacht Design
-      </span>
-    )
-  }
-  {
-    dot && (
-      <span
-        class:list={[
-          'mt-[0.9em] block size-[0.3em] rounded-full',
-          tone === 'ocean' ? 'bg-ocean' : 'bg-limestone',
-        ]}
-        style="min-width:5px;min-height:5px"
-        aria-hidden="true"
-      />
-    )
-  }
+<span
+  class:list={['marca', toneClass, className]}
+  style={`font-size:${base};--sub-corpo:${escalaSub.corpo};--sub-entre:${escalaSub.entre};--sub-topo:${escalaSub.topo}`}
+>
+  <span class="marca-nome">A<span class="marca-medio">·</span>MAR</span>
+  {subtitle && <span class="marca-sub">Yacht Design</span>}
+  {dot && <span class="marca-selo" aria-hidden="true" />}
 </span>
+
+<style>
+  .marca {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+  }
+
+  .marca-nome {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 1em;
+    letter-spacing: 0.055em;
+    /* o espaçamento é aplicado depois de cada letra: compensa para o bloco
+       continuar opticamente centrado */
+    text-indent: 0.055em;
+    line-height: 1;
+  }
+
+  .marca-medio {
+    font-size: 0.66em;
+    padding-inline: 0.1em;
+    vertical-align: 0.08em;
+  }
+
+  /* 0.185 do nome, com a abertura necessária para as duas linhas casarem em
+     largura — é o que dá o alinhamento do lockup impresso. */
+  .marca-sub {
+    font-family: var(--font-sans);
+    font-size: var(--sub-corpo);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: var(--sub-entre);
+    text-indent: var(--sub-entre);
+    line-height: 1;
+    margin-top: var(--sub-topo);
+    opacity: 0.85;
+  }
+
+  .marca-selo {
+    display: block;
+    width: 0.085em;
+    height: 0.085em;
+    min-width: 5px;
+    min-height: 5px;
+    border-radius: 999px;
+    margin-top: 0.4em;
+    /* o ponto é o acento da marca: azul-profundo, mesmo quando o lockup é escuro */
+    background: var(--color-ocean);
+  }
+
+  .text-limestone .marca-selo {
+    background: var(--color-limestone);
+  }
+</style>
