@@ -120,9 +120,13 @@ margem em `vw`, não em `em`.
 
 A seção **Antes e depois** usa fotografia real de um refit em dois ambientes (salão
 principal e cockpit), apresentada em um comparador de máscara arrastável
-(`components/Comparador.astro`). O controle é um `<input type="range">` transparente
-cobrindo a área inteira: arraste com mouse, toque, teclado e semântica de leitor de
-tela saem de graça, sem reimplementar nada.
+(`components/Comparador.astro`).
+
+O `<input type="range">` ficou só para teclado e leitor de tela; o ponteiro é tratado
+no contêiner, com `setPointerCapture`. O motivo: o Safari do iOS só inicia arraste em
+cima do polegar do range, que aqui é invisível — no iPhone o comparador respondia a
+toque solto, mas não a arraste. O contêiner leva `touch-action: pan-y`, então o arraste
+horizontal é nosso e a rolagem vertical da página continua passando por cima dele.
 
 Cada par é recortado na mesma proporção 4:5, e as larguras servidas são limitadas ao
 tamanho do original para nunca ampliar. Os PNGs de 0,7 a 2,4 MB viram WebP de 16 a 120 KB.
@@ -218,9 +222,8 @@ Não há backend. O formulário monta uma mensagem já formatada e abre o **What
 canal real desse público no Brasil. Nada é armazenado no site, então não há LGPD a tratar
 nem endpoint para manter.
 
-Telefone, Instagram e handle ficam em `src/data/site.ts`. O e-mail está como `null` (o cartão
-saiu com o campo em branco) — ao definir, preencher `contact.email` e o bloco aparece sozinho
-na seção de contato.
+Telefone, e-mail, Instagram e localização ficam em `src/data/site.ts` e alimentam a
+seção de contato e o rodapé.
 
 ## Deploy — Cloudflare
 
@@ -257,7 +260,6 @@ registro DNS é criado automaticamente no primeiro `wrangler deploy`.
 
 ### Antes de publicar
 
-- [ ] Preencher `contact.email` se houver e-mail da marca
 - [ ] Substituir os `PhotoSlot` por fotografia real
 - [ ] Regerar `public/og.png` se a chamada principal mudar
 

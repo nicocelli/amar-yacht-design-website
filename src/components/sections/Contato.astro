@@ -90,7 +90,7 @@ const waDirect = `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(
     </div>
   </div>
 
-  <dl class="reveal mt-20 grid gap-x-12 gap-y-8 rule-t pt-10 sm:grid-cols-3 lg:mt-24">
+  <dl class="reveal mt-20 grid gap-x-10 gap-y-8 rule-t pt-10 sm:grid-cols-2 lg:mt-24 lg:grid-cols-4">
     <div>
       <dt class="eyebrow">WhatsApp</dt>
       <dd class="mt-3">
@@ -119,21 +119,26 @@ const waDirect = `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(
       </dd>
     </div>
 
-    <div>
-      <dt class="eyebrow">{contact.email ? 'E-mail' : 'Atendimento'}</dt>
-      <dd class="mt-3">
-        {
-          contact.email ? (
+    {
+      contact.email && (
+        <div>
+          <dt class="eyebrow">E-mail</dt>
+          <dd class="mt-3">
             <a
               href={`mailto:${contact.email}`}
-              class="font-display text-2xl font-light text-ocean underline decoration-taupe underline-offset-[6px] transition-colors hover:decoration-ocean"
+              class="font-display text-[1.35rem] leading-snug font-light break-words text-ocean underline decoration-taupe underline-offset-[6px] transition-colors hover:decoration-ocean"
             >
               {contact.email}
             </a>
-          ) : (
-            <span class="font-display text-2xl font-light text-ocean">{brand.location}</span>
-          )
-        }
+          </dd>
+        </div>
+      )
+    }
+
+    <div>
+      <dt class="eyebrow">Atendimento</dt>
+      <dd class="mt-3">
+        <span class="font-display text-2xl font-light text-ocean">{brand.location}</span>
       </dd>
     </div>
   </dl>

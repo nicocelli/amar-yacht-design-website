@@ -41,7 +41,7 @@ const etapas = [
         <SectionHead
           eyebrow="Nossa forma de projetar"
           title="Design que começa pela experiência."
-          titleClass="max-w-[14ch]"
+          titleClass="max-w-[20ch] lg:max-w-[14ch]"
         />
 
         <ol class="mt-12 hidden lg:block" data-sumario>
@@ -73,7 +73,7 @@ const etapas = [
             <article
               id={`metodo-${etapa.id}`}
               data-etapa={etapa.id}
-              class="etapa flex min-h-[58svh] scroll-mt-32 flex-col justify-center border-t border-taupe/40 py-12 first:border-t-0 lg:border-0 lg:py-0"
+              class="etapa flex scroll-mt-28 flex-col justify-center border-t border-taupe/40 py-12 first:border-t-0 lg:min-h-[58svh] lg:border-0 lg:py-0"
             >
               <span class="eyebrow tabular-nums text-ocean/45">{String(i + 1).padStart(2, '0')}</span>
               <h3 class="display-md mt-5 max-w-[16ch]">{etapa.titulo}</h3>

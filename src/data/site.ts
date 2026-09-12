@@ -26,8 +26,7 @@ export const contact = {
   phoneHref: '+5547999334564',
   instagramHandle: '@amaryachtdesign',
   instagramUrl: 'https://www.instagram.com/amaryachtdesign',
-  /** TODO: preencher quando o e-mail da marca estiver definido (o cartão saiu com o campo em branco). */
-  email: null as string | null,
+  email: 'jessica@amaryacht.design' as string | null,
 } as const;
 
 export const nav = [

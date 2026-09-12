@@ -42,7 +42,7 @@ const {
 ---
 
 <div
-  class:list={['comparador relative w-full overflow-hidden rounded-media bg-sand select-none', proporcao, className]}
+  class:list={['comparador relative w-full cursor-ew-resize touch-pan-y overflow-hidden rounded-media bg-sand select-none', proporcao, className]}
   data-comparador
   style="--pos:50%"
 >
@@ -112,9 +112,13 @@ const {
 
   /* O range cobre a área toda e fica invisível: o "polegar" visível é a pega
      desenhada acima. Mantém foco de teclado sem duplicar o controle. */
+  /* O range existe para teclado e leitor de tela. O ponteiro é tratado no
+     contêiner: o Safari do iOS só inicia arraste em cima do polegar do range,
+     que aqui é invisível — no iPhone o comparador só respondia a toque solto. */
   .comparador-controle {
     margin: 0;
     outline-offset: -2px;
+    pointer-events: none;
   }
   .comparador-controle::-webkit-slider-thumb {
     appearance: none;
@@ -141,7 +145,38 @@ const {
     if (!range) continue;
 
     const aplicar = () => box.style.setProperty('--pos', `${range.value}%`);
+
+    /** posiciona a máscara pelo x do ponteiro, em porcentagem da largura */
+    const seguir = (x: number) => {
+      const caixa = box.getBoundingClientRect();
+      if (!caixa.width) return;
+      const pct = ((x - caixa.left) / caixa.width) * 100;
+      range.value = String(Math.min(Math.max(pct, 0), 100));
+      aplicar();
+    };
+
+    // teclado (setas) continua vindo do próprio range
     range.addEventListener('input', aplicar);
+
+    box.addEventListener('pointerdown', (evento) => {
+      box.setPointerCapture(evento.pointerId);
+      seguir(evento.clientX);
+    });
+
+    box.addEventListener('pointermove', (evento) => {
+      if (!box.hasPointerCapture(evento.pointerId)) return;
+      // com a captura ativa, o arraste horizontal é nosso; touch-pan-y no CSS
+      // preserva a rolagem vertical da página
+      evento.preventDefault();
+      seguir(evento.clientX);
+    });
+
+    const soltar = (evento: PointerEvent) => {
+      if (box.hasPointerCapture(evento.pointerId)) box.releasePointerCapture(evento.pointerId);
+    };
+    box.addEventListener('pointerup', soltar);
+    box.addEventListener('pointercancel', soltar);
+
     aplicar();
   }
 </script>

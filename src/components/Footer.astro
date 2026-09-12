@@ -59,6 +59,18 @@ const ano = new Date().getFullYear();
               {contact.phoneDisplay}
             </a>
           </li>
+          {
+            contact.email && (
+              <li>
+                <a
+                  href={`mailto:${contact.email}`}
+                  class="font-sans text-[0.8125rem] break-words text-limestone/65 transition-colors duration-300 hover:text-limestone"
+                >
+                  {contact.email}
+                </a>
+              </li>
+            )
+          }
           <li>
             <a
               href={contact.instagramUrl}
