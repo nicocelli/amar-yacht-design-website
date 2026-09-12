@@ -1,0 +1,48 @@
+---
+import SectionHead from '../SectionHead.astro';
+import { parceiros } from '../../data/site';
+---
+
+<section id="parcerias" class="bg-sand/55">
+  <div class="wrap py-section">
+    <div class="grid gap-x-16 gap-y-14 lg:grid-cols-12">
+      <div class="lg:col-span-5">
+        <SectionHead
+          eyebrow="Parcerias"
+          title="Uma rede de profissionais para entregar melhores projetos."
+        />
+
+        <p class="reveal mt-8 max-w-[44ch] text-graphite/85" style="--reveal-delay:100ms">
+          Acreditamos que um bom projeto náutico depende da integração entre design, execução e
+          conhecimento técnico. Nosso objetivo é participar desse ecossistema criando soluções que
+          agreguem valor tanto para o proprietário quanto para a própria embarcação.
+        </p>
+
+        <a
+          href="#contato"
+          class="reveal mt-10 inline-flex items-center gap-3 border-b border-ocean pb-1 font-sans text-[0.6875rem] uppercase tracking-[0.2em] text-ocean"
+          style="--reveal-delay:180ms"
+        >
+          Propor uma parceria
+          <svg width="16" height="8" viewBox="0 0 16 8" fill="none" aria-hidden="true">
+            <path d="M0 4h14M11 1l3 3-3 3" stroke="currentColor" stroke-width="1"></path>
+          </svg>
+        </a>
+      </div>
+
+      <ul class="lg:col-span-6 lg:col-start-7">
+        {
+          parceiros.map((p, i) => (
+            <li
+              class="reveal flex items-center gap-5 border-t border-taupe/40 py-6 last:border-b"
+              style={`--reveal-delay:${i * 70}ms`}
+            >
+              <span class="block size-1 shrink-0 rounded-full bg-ocean" aria-hidden="true" />
+              <span class="font-display text-[1.5rem] leading-snug font-light text-ocean">{p}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>

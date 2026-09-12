@@ -1,0 +1,109 @@
+---
+import Wordmark from '../Wordmark.astro';
+import PilhaFotos from '../PilhaFotos.astro';
+import { brand, contact } from '../../data/site';
+
+// PROVISÓRIAS: banco de imagens (licença Pexels, uso comercial livre, sem atribuição).
+// Trocar por fotografia própria da A·MAR. Ver src/assets/README.md.
+import entardecer from '../../assets/hero-colecao-1-entardecer.jpg';
+import interior from '../../assets/hero-colecao-2-interior.jpg';
+import aerea from '../../assets/hero-colecao-3-aerea.jpg';
+import detalhe from '../../assets/hero-colecao-4-detalhe.jpg';
+
+const colecao = [
+  {
+    src: entardecer,
+    alt: 'Área de estar externa de um iate ao entardecer, com estofaria em tecido claro e vista para águas calmas.',
+  },
+  {
+    src: interior,
+    alt: 'Interior de embarcação com almofadas em linho, marcenaria em madeira e vista para a marina.',
+  },
+  { src: aerea, alt: 'Vista aérea de um veleiro fundeado sobre água escura e calma.' },
+  { src: detalhe, alt: 'Detalhe de cabos náuticos sobre convés de teca em luz de fim de tarde.' },
+];
+---
+
+<section id="topo" class="relative flex min-h-svh flex-col">
+  <div class="wrap flex flex-1 flex-col justify-center pt-32 pb-16 lg:pt-36 lg:pb-20">
+    {/*
+      A pilha é irmã do bloco de texto num flex com items-stretch: em vez de receber
+      uma altura fixa, ela herda a do texto. Assim vai exatamente do topo da marca
+      até a base dos botões, em qualquer largura de tela.
+    */}
+    <div class="flex flex-col gap-y-14 lg:flex-row lg:items-stretch lg:gap-x-14">
+      <div class="lg:flex-1">
+        <div class="reveal">
+          <Wordmark size="lg" class="items-start! text-left" />
+        </div>
+
+        <p
+          class="eyebrow reveal mt-8 text-graphite/70"
+          style="--reveal-delay:120ms;letter-spacing:0.3em"
+        >
+          Interiores · Refit · Layout
+        </p>
+
+        <h1
+          class="display-lg reveal mt-7 max-w-[19ch] text-[clamp(2.25rem,4.4vw,3.6rem)]"
+          style="--reveal-delay:200ms"
+        >
+          Projetamos espaços a bordo que unem estética, funcionalidade e experiência.
+        </h1>
+
+        <p
+          class="reveal mt-7 max-w-[46ch] text-[1.0625rem] leading-relaxed text-graphite/85"
+          style="--reveal-delay:280ms"
+        >
+          Estúdio de design especializado em interiores náuticos, projetos e refit de embarcações.
+        </p>
+
+        <div
+          class="reveal mt-10 flex flex-wrap items-center gap-x-8 gap-y-4"
+          style="--reveal-delay:360ms"
+        >
+          <a
+            href="#contato"
+            class="group inline-flex items-center gap-3 rounded-full bg-ocean px-8 py-4 font-sans text-[0.6875rem] uppercase tracking-[0.2em] text-limestone transition-colors duration-300 hover:bg-ocean-deep"
+          >
+            Iniciar um projeto
+            <svg
+              width="16"
+              height="8"
+              viewBox="0 0 16 8"
+              fill="none"
+              aria-hidden="true"
+              class="transition-transform duration-300 group-hover:translate-x-1"
+            >
+              <path d="M0 4h14M11 1l3 3-3 3" stroke="currentColor" stroke-width="1"></path>
+            </svg>
+          </a>
+
+          <a
+            href="#interiores"
+            class="font-sans text-[0.6875rem] uppercase tracking-[0.2em] text-ocean underline decoration-taupe underline-offset-[6px] transition-colors duration-300 hover:decoration-ocean"
+          >
+            O que fazemos
+          </a>
+        </div>
+      </div>
+
+      <PilhaFotos
+        fotos={colecao}
+        class="aspect-square lg:aspect-auto lg:w-[min(34rem,44%)] lg:shrink-0"
+      />
+    </div>
+  </div>
+
+  <div class="wrap hidden items-center justify-between border-t border-taupe/40 py-5 lg:flex">
+    <p class="eyebrow">{brand.location}</p>
+    <a
+      href={contact.instagramUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="eyebrow transition-colors duration-300 hover:text-ocean"
+    >
+      {contact.instagramHandle}
+    </a>
+  </div>
+</section>

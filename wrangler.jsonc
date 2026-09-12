@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "amar-yacht-design",
+  "compatibility_date": "2026-09-12",
+  // Só o build estático é publicado — a raiz do repo (brand/, .git/) fica de fora.
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  },
+  "observability": {
+    "enabled": true
+  },
+  // Exige que amaryacht.design esteja como zona na mesma conta Cloudflare.
+  // O DNS é criado automaticamente no primeiro deploy.
+  "routes": [
+    { "pattern": "amaryacht.design", "custom_domain": true },
+    { "pattern": "www.amaryacht.design", "custom_domain": true }
+  ]
+}

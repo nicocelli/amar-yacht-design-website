@@ -1,0 +1,33 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import Hero from '../components/sections/Hero.astro';
+import Sobre from '../components/sections/Sobre.astro';
+import Interiores from '../components/sections/Interiores.astro';
+import Refit from '../components/sections/Refit.astro';
+import AntesDepois from '../components/sections/AntesDepois.astro';
+import Metodo from '../components/sections/Metodo.astro';
+import Parcerias from '../components/sections/Parcerias.astro';
+import Marcas from '../components/sections/Marcas.astro';
+import Contato from '../components/sections/Contato.astro';
+---
+
+<Base
+  title="A·MAR Yacht Design | Interiores náuticos, refit e layout de embarcações"
+  description="Estúdio de design especializado em interiores náuticos, projetos e refit de embarcações em Santa Catarina. Projetamos espaços a bordo que unem estética, funcionalidade e experiência."
+>
+  <Nav />
+  <main id="conteudo">
+    <Hero />
+    <Sobre />
+    <Interiores />
+    <Refit />
+    <AntesDepois />
+    <Metodo />
+    <Parcerias />
+    <Marcas />
+    <Contato />
+  </main>
+  <Footer />
+</Base>

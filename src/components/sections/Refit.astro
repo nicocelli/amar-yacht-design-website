@@ -1,0 +1,58 @@
+---
+import SectionHead from '../SectionHead.astro';
+import PhotoSlot from '../PhotoSlot.astro';
+// PROVISÓRIA: banco de imagens (licença Pexels). Trocar por foto de obra da A·MAR.
+import detalheTeca from '../../assets/refit-detalhe-teca.jpg';
+import { refitItems } from '../../data/site';
+---
+
+<section id="refit" class="bg-ocean text-limestone">
+  <div class="wrap py-section">
+    <div class="grid gap-x-16 gap-y-14 lg:grid-cols-12">
+      <div class="lg:col-span-5">
+        <SectionHead
+          eyebrow="Refit"
+          title="Renovar sem perder a essência da embarcação."
+          tone="dark"
+        />
+
+        <p class="reveal mt-8 max-w-[44ch] text-limestone/85" style="--reveal-delay:100ms">
+          Um projeto de refit pode transformar completamente a percepção de um barco existente. A
+          A·MAR desenvolve soluções para reformas completas ou intervenções pontuais.
+        </p>
+
+        <PhotoSlot
+          class="reveal mt-12 aspect-[3/4] lg:mt-14"
+          src={detalheTeca}
+          alt="Escada em teca vista de cima, com acabamento náutico em réguas claras."
+          sizes="(min-width: 1024px) 38vw, 92vw"
+        />
+      </div>
+
+      <div class="lg:col-span-6 lg:col-start-7">
+        <ul class="grid">
+          {
+            refitItems.map((item, i) => (
+              <li
+                class="reveal group flex items-baseline gap-5 border-b border-limestone/15 py-5 last:border-0"
+                style={`--reveal-delay:${Math.min(i, 6) * 60}ms`}
+              >
+                <span class="eyebrow w-6 shrink-0 text-sage/70 tabular-nums">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <span class="font-display text-[1.4rem] leading-snug font-light text-limestone/90 transition-colors duration-500 group-hover:text-limestone">
+                  {item}
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+
+        <p class="reveal mt-12 max-w-[52ch] border-t border-limestone/20 pt-8 text-[0.9375rem] leading-relaxed text-limestone/80">
+          Cada intervenção é pensada considerando as características técnicas da embarcação e o
+          resultado desejado pelo proprietário.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

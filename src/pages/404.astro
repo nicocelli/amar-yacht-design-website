@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+import Wordmark from '../components/Wordmark.astro';
+---
+
+<Base title="Página não encontrada | A·MAR Yacht Design" description="A página que você procura não existe." noindex>
+  <main id="conteudo" class="wrap flex min-h-svh flex-col items-center justify-center py-24 text-center">
+    <Wordmark size="md" dot />
+    <p class="eyebrow mt-16">Erro 404</p>
+    <h1 class="display-lg mt-6 max-w-[16ch]">Esta página não existe.</h1>
+    <a
+      href="/"
+      class="mt-12 inline-flex items-center gap-3 rounded-full bg-ocean px-8 py-4 font-sans text-[0.6875rem] uppercase tracking-[0.2em] text-limestone transition-colors duration-300 hover:bg-ocean-deep"
+    >
+      Voltar ao início
+      <svg width="16" height="8" viewBox="0 0 16 8" fill="none" aria-hidden="true">
+        <path d="M0 4h14M11 1l3 3-3 3" stroke="currentColor" stroke-width="1"></path>
+      </svg>
+    </a>
+  </main>
+</Base>

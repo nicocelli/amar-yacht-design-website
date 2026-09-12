@@ -1,0 +1,95 @@
+---
+import SectionHead from '../SectionHead.astro';
+import Comparador from '../Comparador.astro';
+
+import salaoAntes from '../../assets/refit-salao-antes.png';
+import salaoDepois from '../../assets/refit-salao-depois.png';
+import cockpitAntes from '../../assets/refit-cockpit-antes.png';
+import cockpitDepois from '../../assets/refit-cockpit-depois.png';
+
+/**
+ * As fotos de cada par têm proporções próprias (9:16 no salão, 3:4 no cockpit).
+ * O comparador recorta as duas na mesma proporção 4:5, então a comparação segue
+ * honesta — o mesmo enquadramento dos dois lados — e os blocos ficam alinhados.
+ */
+const ambientes = [
+  {
+    id: 'salao',
+    nome: 'Salão principal',
+    resumo: 'Piso e estofaria refeitos. Layout e marcenaria permaneceram como estavam.',
+    larguras: [320, 480, 675],
+    tamanhos: '(min-width: 1024px) 30rem, 92vw',
+    posicao: 'center 78%',
+    antes: {
+      src: salaoAntes,
+      alt: 'Salão antes do refit: sofá em couro creme e piso revestido em carpete bege.',
+    },
+    depois: {
+      src: salaoDepois,
+      alt: 'O mesmo salão depois do refit: sofá em tecido claro texturizado e piso em madeira escura.',
+    },
+  },
+  {
+    id: 'cockpit',
+    nome: 'Cockpit',
+    resumo: 'Estofaria em tecido náutico claro e piso em teka no lugar do carpete.',
+    larguras: [360, 560, 900],
+    tamanhos: '(min-width: 1024px) 30rem, 92vw',
+    posicao: 'center 62%',
+    antes: {
+      src: cockpitAntes,
+      alt: 'Cockpit antes do refit: estofados em vinil branco e piso revestido em carpete cinza.',
+    },
+    depois: {
+      src: cockpitDepois,
+      alt: 'O mesmo cockpit depois do refit: estofados em tecido claro com almofadas azuis e piso em teka.',
+    },
+  },
+];
+---
+
+<section id="antes-depois" class="wrap py-section">
+  <div class="grid gap-x-16 gap-y-10 lg:grid-cols-12">
+    <SectionHead
+      eyebrow="Antes e depois"
+      title="O mesmo barco, outra forma de viver a bordo."
+      class="lg:col-span-6"
+    />
+
+    <div class="reveal lg:col-span-5 lg:col-start-8 lg:pt-3">
+      <p class="text-graphite/85">
+        Nenhuma mudança na estrutura ou no layout da embarcação. O que muda é a estofaria, o piso e
+        a ambientação. Decisões de superfície que reescrevem a percepção do espaço inteiro.
+      </p>
+      <p class="eyebrow mt-6 flex items-center gap-3">
+        <svg width="22" height="10" viewBox="0 0 22 10" fill="none" aria-hidden="true">
+          <path d="M8 1L4 5l4 4M14 1l4 4-4 4" stroke="currentColor" stroke-width="1.25"></path>
+        </svg>
+        Arraste para comparar
+      </p>
+    </div>
+  </div>
+
+  <div class="mt-16 grid max-w-5xl gap-x-10 gap-y-14 lg:mt-20 lg:grid-cols-2">
+    {
+      ambientes.map((amb, i) => (
+        <article class="reveal" style={`--reveal-delay:${i * 140}ms`}>
+          <Comparador
+            id={`cmp-${amb.id}`}
+            legenda={amb.nome}
+            antes={amb.antes}
+            depois={amb.depois}
+            larguras={amb.larguras}
+            tamanhos={amb.tamanhos}
+            posicao={amb.posicao}
+          />
+
+          <header class="mt-6 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+            <h3 class="display-md">{amb.nome}</h3>
+          </header>
+          <p class="mt-2 max-w-[46ch] text-[0.9375rem] text-graphite/80">{amb.resumo}</p>
+        </article>
+      ))
+    }
+  </div>
+</section>

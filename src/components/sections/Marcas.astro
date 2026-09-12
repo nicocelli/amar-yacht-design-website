@@ -1,0 +1,68 @@
+---
+import { marcasNauticas } from '../../data/site';
+
+/**
+ * Faixa de marcas em movimento contínuo.
+ *
+ * A trilha repete a lista duas vezes e desliza 50%: quando a animação reinicia,
+ * a segunda cópia está exatamente onde a primeira começou, então o laço é
+ * imperceptível. A cópia duplicada fica aria-hidden para o leitor de tela não
+ * ouvir a lista duas vezes.
+ */
+const lista = [...marcasNauticas];
+---
+
+<section aria-labelledby="marcas-titulo" class="rule-t rule-b overflow-hidden bg-limestone py-14 lg:py-16">
+  <h2 id="marcas-titulo" class="eyebrow wrap">
+    Estaleiros e marcas do mercado náutico
+  </h2>
+
+  <div class="marquee mt-9 flex" data-marquee>
+    {
+      [0, 1].map((copia) => (
+        <ul class="marquee-trilha flex shrink-0 items-center" aria-hidden={copia === 1 ? 'true' : undefined}>
+          {lista.map((marca) => (
+            <li class="flex shrink-0 items-center">
+              <span class="font-display text-[1.6rem] leading-none font-light whitespace-nowrap text-ocean/75 lg:text-[2rem]">
+                {marca}
+              </span>
+              <span class="mx-8 block size-1 shrink-0 rounded-full bg-taupe lg:mx-12" aria-hidden="true" />
+            </li>
+          ))}
+        </ul>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .marquee-trilha {
+    animation: marquee-desliza 78s linear infinite;
+  }
+
+  /* pausa quando o ponteiro está sobre a faixa ou quando algo dentro recebe foco */
+  .marquee:hover .marquee-trilha,
+  .marquee:focus-within .marquee-trilha {
+    animation-play-state: paused;
+  }
+
+  @keyframes marquee-desliza {
+    to {
+      transform: translateX(-100%);
+    }
+  }
+
+  /* Sem movimento: a faixa vira uma lista rolável na horizontal. */
+  @media (prefers-reduced-motion: reduce) {
+    .marquee {
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+    .marquee-trilha {
+      animation: none;
+    }
+    .marquee-trilha[aria-hidden='true'] {
+      display: none;
+    }
+  }
+</style>

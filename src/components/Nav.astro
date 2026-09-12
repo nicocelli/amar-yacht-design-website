@@ -1,0 +1,137 @@
+---
+import Wordmark from './Wordmark.astro';
+import { nav, contact } from '../data/site';
+
+const waHref = `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(
+  'Olá! Vim pelo site da A·MAR e gostaria de conversar sobre um projeto.',
+)}`;
+---
+
+<header
+  id="site-nav"
+  class="fixed inset-x-0 top-0 z-50 border-b border-transparent bg-limestone transition-[border-color,box-shadow] duration-500 data-[stuck]:border-taupe/40"
+>
+  <div class="wrap flex items-center justify-between gap-6 py-4 md:py-5">
+    <a href="#topo" aria-label="A·MAR Yacht Design, ir para o início" class="shrink-0">
+      <Wordmark size="sm" />
+    </a>
+
+    <nav aria-label="Navegação principal" class="hidden lg:block">
+      <ul class="flex items-center gap-8 xl:gap-10">
+        {
+          nav.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class="font-sans text-[0.8125rem] text-graphite/80 transition-colors duration-300 hover:text-ocean"
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="flex items-center gap-3">
+      <a
+        href="#contato"
+        class="hidden rounded-full border border-ocean px-5 py-3 font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-ocean transition-colors duration-300 hover:bg-ocean hover:text-limestone sm:inline-block"
+      >
+        Iniciar um projeto
+      </a>
+
+      <a
+        href={waHref}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-ocean underline underline-offset-4 decoration-taupe transition-colors hover:decoration-ocean sm:hidden"
+      >
+        WhatsApp
+      </a>
+
+      <button
+        type="button"
+        id="nav-toggle"
+        aria-expanded="false"
+        aria-controls="nav-drawer"
+        class="lg:hidden -mr-2 p-2 text-ocean"
+      >
+        <span class="sr-only">Abrir menu</span>
+        <svg width="22" height="12" viewBox="0 0 22 12" aria-hidden="true" fill="none">
+          <path d="M0 1h22M0 11h22" stroke="currentColor" stroke-width="1"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Menu mobile -->
+  <div
+    id="nav-drawer"
+    hidden
+    class="lg:hidden border-t border-taupe/40 bg-limestone/95 backdrop-blur-md"
+  >
+    <ul class="wrap flex flex-col py-2">
+      {
+        nav.map((item) => (
+          <li class="border-b border-taupe/25 last:border-0">
+            <a
+              href={item.href}
+              data-nav-link
+              class="block py-4 font-display text-2xl font-light text-ocean"
+            >
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+      <li class="pt-5 pb-4">
+        <a
+          href="#contato"
+          data-nav-link
+          class="inline-block rounded-full border border-ocean px-6 py-3.5 font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-ocean"
+        >
+          Iniciar um projeto
+        </a>
+      </li>
+    </ul>
+  </div>
+</header>
+
+<script>
+  const header = document.getElementById('site-nav')!;
+  const toggle = document.getElementById('nav-toggle')!;
+  const drawer = document.getElementById('nav-drawer')!;
+
+  // Sentinela invisível no topo: enquanto ela estiver visível, a barra fica transparente.
+  const sentinel = document.createElement('div');
+  sentinel.setAttribute('aria-hidden', 'true');
+  sentinel.style.cssText = 'position:absolute;top:0;height:1px;width:1px;';
+  document.body.prepend(sentinel);
+
+  new IntersectionObserver(
+    ([entry]) => {
+      if (entry!.isIntersecting) header.removeAttribute('data-stuck');
+      else header.setAttribute('data-stuck', '');
+    },
+    { threshold: 0 },
+  ).observe(sentinel);
+
+  const setOpen = (open: boolean) => {
+    drawer.hidden = !open;
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.querySelector('span')!.textContent = open ? 'Fechar menu' : 'Abrir menu';
+    if (open) header.setAttribute('data-stuck', '');
+  };
+
+  toggle.addEventListener('click', () => setOpen(drawer.hidden));
+  drawer.querySelectorAll('[data-nav-link]').forEach((a) => {
+    a.addEventListener('click', () => setOpen(false));
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !drawer.hidden) {
+      setOpen(false);
+      toggle.focus();
+    }
+  });
+</script>

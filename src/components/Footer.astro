@@ -1,0 +1,83 @@
+---
+import Wordmark from './Wordmark.astro';
+import { brand, contact, nav } from '../data/site';
+
+const ano = new Date().getFullYear();
+---
+
+<footer class="bg-ocean text-limestone">
+  <div class="wrap py-20 lg:py-24">
+    <div class="flex flex-col gap-14 lg:flex-row lg:items-start lg:justify-between">
+      <div>
+        <Wordmark size="md" tone="limestone" class="items-start! text-left" />
+        <p class="eyebrow mt-8 text-limestone/65" style="letter-spacing:0.3em">
+          Interiores · Refit · Layout
+        </p>
+      </div>
+
+      <nav aria-label="Rodapé" class="lg:pt-2">
+        <ul class="grid gap-3 sm:grid-cols-2 sm:gap-x-16 lg:grid-cols-1">
+          {
+            nav.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  class="font-sans text-[0.8125rem] text-limestone/65 transition-colors duration-300 hover:text-limestone"
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+          <li>
+            <a
+              href="#contato"
+              class="font-sans text-[0.8125rem] text-limestone/65 transition-colors duration-300 hover:text-limestone"
+            >
+              Contato
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <address class="not-italic lg:pt-2">
+        <p class="font-display text-xl leading-relaxed font-light text-limestone/90">
+          {brand.founder}<br />
+          <span class="text-limestone/60">{brand.role}</span>
+        </p>
+        <ul class="mt-6 space-y-2">
+          <li>
+            <a
+              href={`https://wa.me/${contact.whatsapp}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="font-sans text-[0.8125rem] text-limestone/65 transition-colors duration-300 hover:text-limestone"
+            >
+              {contact.phoneDisplay}
+            </a>
+          </li>
+          <li>
+            <a
+              href={contact.instagramUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="font-sans text-[0.8125rem] text-limestone/65 transition-colors duration-300 hover:text-limestone"
+            >
+              {contact.instagramHandle}
+            </a>
+          </li>
+          <li class="font-sans text-[0.8125rem] text-limestone/65">{brand.location}</li>
+        </ul>
+      </address>
+    </div>
+
+    <div
+      class="mt-16 flex flex-col gap-4 border-t border-limestone/20 pt-8 sm:flex-row sm:items-center sm:justify-between"
+    >
+      <p class="eyebrow text-limestone/60">{brand.signature}</p>
+      <p class="font-sans text-[0.75rem] text-limestone/60">
+        © {ano} {brand.name}
+      </p>
+    </div>
+  </div>
+</footer>

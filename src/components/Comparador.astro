@@ -1,0 +1,147 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+/**
+ * Comparador antes/depois com máscara arrastável.
+ *
+ * O controle é um <input type="range"> transparente cobrindo a área inteira:
+ * ganhamos arraste com mouse, toque, teclado (setas) e semântica de leitor de
+ * tela sem reimplementar nada. Sem JS, o range continua funcionando — só não
+ * atualiza a máscara, e o "antes" fica visível por inteiro.
+ */
+interface Props {
+  id: string;
+  legenda: string;
+  antes: { src: ImageMetadata; alt: string };
+  depois: { src: ImageMetadata; alt: string };
+  larguras: number[];
+  tamanhos: string;
+  /** Proporção do recorte. Quadrado mantém o bloco compacto. */
+  proporcao?: string;
+  /**
+   * object-position aplicado às duas fotos. As originais são retratos altos e a
+   * mudança que interessa (o piso) está na parte de baixo — centralizar o
+   * recorte cortaria justamente ela.
+   */
+  posicao?: string;
+  class?: string;
+}
+
+const {
+  id,
+  legenda,
+  antes,
+  depois,
+  larguras,
+  tamanhos,
+  proporcao = 'aspect-square',
+  posicao = 'center 60%',
+  class: className = '',
+} = Astro.props;
+---
+
+<div
+  class:list={['comparador relative w-full overflow-hidden rounded-media bg-sand select-none', proporcao, className]}
+  data-comparador
+  style="--pos:50%"
+>
+  <Image
+    src={antes.src}
+    alt={antes.alt}
+    widths={larguras}
+    sizes={tamanhos}
+    loading="lazy"
+    decoding="async"
+    style={`object-position:${posicao}`}
+    class="absolute inset-0 size-full object-cover"
+  />
+
+  <Image
+    src={depois.src}
+    alt={depois.alt}
+    widths={larguras}
+    sizes={tamanhos}
+    loading="lazy"
+    decoding="async"
+    style={`object-position:${posicao}`}
+    class="comparador-depois absolute inset-0 size-full object-cover"
+  />
+
+  <!-- rótulos: cada um some quando sua faixa fica estreita demais para lê-lo -->
+  <span
+    class="eyebrow pointer-events-none absolute top-4 left-4 z-2 rounded-full bg-limestone/90 px-3.5 py-2 text-ocean"
+    >Antes</span
+  >
+  <span
+    class="eyebrow pointer-events-none absolute top-4 right-4 z-2 rounded-full bg-ocean/90 px-3.5 py-2 text-limestone"
+    >Depois</span
+  >
+
+  <!-- divisor + pega -->
+  <div class="comparador-linha pointer-events-none absolute inset-y-0 z-2 w-px bg-limestone">
+    <span
+      class="absolute top-1/2 left-1/2 flex size-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-limestone text-ocean shadow-[0_2px_12px_rgba(14,42,61,0.28)]"
+    >
+      <svg width="22" height="10" viewBox="0 0 22 10" fill="none" aria-hidden="true">
+        <path d="M8 1L4 5l4 4M14 1l4 4-4 4" stroke="currentColor" stroke-width="1.25"></path>
+      </svg>
+    </span>
+  </div>
+
+  <input
+    type="range"
+    min="0"
+    max="100"
+    value="50"
+    step="1"
+    id={id}
+    aria-label={`Comparar antes e depois: ${legenda}`}
+    class="comparador-controle absolute inset-0 z-3 size-full cursor-ew-resize appearance-none bg-transparent"
+  />
+</div>
+
+<style>
+  .comparador-depois {
+    clip-path: inset(0 0 0 var(--pos));
+  }
+
+  .comparador-linha {
+    left: var(--pos);
+  }
+
+  /* O range cobre a área toda e fica invisível: o "polegar" visível é a pega
+     desenhada acima. Mantém foco de teclado sem duplicar o controle. */
+  .comparador-controle {
+    margin: 0;
+    outline-offset: -2px;
+  }
+  .comparador-controle::-webkit-slider-thumb {
+    appearance: none;
+    width: 44px;
+    height: 100%;
+    background: transparent;
+    cursor: ew-resize;
+  }
+  .comparador-controle::-moz-range-thumb {
+    width: 44px;
+    height: 100%;
+    border: 0;
+    background: transparent;
+    cursor: ew-resize;
+  }
+  .comparador-controle::-moz-range-track {
+    background: transparent;
+  }
+</style>
+
+<script>
+  for (const box of document.querySelectorAll<HTMLElement>('[data-comparador]')) {
+    const range = box.querySelector<HTMLInputElement>('.comparador-controle');
+    if (!range) continue;
+
+    const aplicar = () => box.style.setProperty('--pos', `${range.value}%`);
+    range.addEventListener('input', aplicar);
+    aplicar();
+  }
+</script>

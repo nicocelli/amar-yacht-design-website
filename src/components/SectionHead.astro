@@ -1,0 +1,33 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  /** Cor do bloco: claro (padrão) ou sobre fundo escuro. */
+  tone?: 'light' | 'dark';
+  class?: string;
+}
+
+const { eyebrow, title, tone = 'light', class: className = '' } = Astro.props;
+---
+
+<div class:list={['reveal', className]}>
+  <p
+    class:list={[
+      'eyebrow flex items-center gap-3',
+      tone === 'dark' ? 'text-limestone/70' : '',
+    ]}
+  >
+    <span
+      class:list={['block size-1 rounded-full', tone === 'dark' ? 'bg-sage' : 'bg-ocean']}
+      aria-hidden="true"></span>
+    {eyebrow}
+  </p>
+
+  <h2
+    class:list={['display-lg mt-6 max-w-[18ch]', tone === 'dark' ? 'text-limestone' : 'text-ocean']}
+  >
+    {title}
+  </h2>
+
+  <slot />
+</div>

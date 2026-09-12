@@ -1,0 +1,52 @@
+---
+import SectionHead from '../SectionHead.astro';
+import { servicos } from '../../data/site';
+---
+
+<section id="interiores" class="bg-sand/55">
+  <div class="wrap py-section">
+    <div class="grid gap-x-16 gap-y-10 lg:grid-cols-12">
+      <SectionHead
+        eyebrow="Projetos de interiores náuticos"
+        title="Soluções personalizadas para dentro e fora da embarcação."
+        class="lg:col-span-6"
+      />
+      <p class="reveal text-graphite/85 lg:col-span-5 lg:col-start-8 lg:pt-3">
+        Desenvolvimento de soluções personalizadas para ambientes internos e externos da
+        embarcação. São cinco frentes que se articulam em um único projeto.
+      </p>
+    </div>
+
+    <ol class="mt-20 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
+      {
+        servicos.map((s, i) => (
+          <li
+            class="reveal group flex flex-col rounded-card border border-taupe/40 bg-limestone/70 p-8 transition-colors duration-500 hover:bg-limestone-soft lg:p-10"
+            style={`--reveal-delay:${i * 80}ms`}
+          >
+            <span class="eyebrow text-ocean/45 transition-colors duration-500 group-hover:text-ocean">
+              {s.n}
+            </span>
+            <h3 class="display-md mt-6 max-w-[16ch]">{s.title}</h3>
+            <p class="mt-5 text-[0.9375rem] leading-relaxed text-graphite/80">{s.body}</p>
+          </li>
+        ))
+      }
+
+      <li class="reveal hidden flex-col justify-end rounded-card bg-ocean p-8 lg:flex lg:p-10" style="--reveal-delay:400ms">
+        <p class="font-display text-[1.75rem] leading-tight font-light text-limestone">
+          Design considerado.<br />Experiências duradouras.
+        </p>
+        <a
+          href="#contato"
+          class="mt-8 inline-flex w-fit items-center gap-3 font-sans text-[0.6875rem] uppercase tracking-[0.2em] text-limestone/90 transition-colors duration-300 hover:text-limestone"
+        >
+          Conversar sobre o seu barco
+          <svg width="16" height="8" viewBox="0 0 16 8" fill="none" aria-hidden="true">
+            <path d="M0 4h14M11 1l3 3-3 3" stroke="currentColor" stroke-width="1"></path>
+          </svg>
+        </a>
+      </li>
+    </ol>
+  </div>
+</section>

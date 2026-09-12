@@ -1,0 +1,67 @@
+---
+/**
+ * Lockup A·MAR — reproduz a marca da papelaria em texto real (acessível,
+ * selecionável e nítido em qualquer densidade de tela).
+ */
+interface Props {
+  size?: 'sm' | 'md' | 'lg';
+  /** Cor do lockup. 'ocean' sobre fundos claros, 'limestone' sobre fundos escuros. */
+  tone?: 'ocean' | 'limestone';
+  /** Mostra a linha "YACHT DESIGN" abaixo do nome. */
+  subtitle?: boolean;
+  /** Mostra o ponto da marca abaixo do lockup. */
+  dot?: boolean;
+  class?: string;
+}
+
+const {
+  size = 'md',
+  tone = 'ocean',
+  subtitle = true,
+  dot = false,
+  class: className = '',
+} = Astro.props;
+
+const nameSize = {
+  sm: 'text-[1.35rem]',
+  md: 'text-[1.75rem] sm:text-[2rem]',
+  lg: 'text-[clamp(2.5rem,5.6vw,4rem)]',
+}[size];
+
+const subSize = {
+  sm: 'text-[0.5rem]',
+  md: 'text-[0.5625rem] sm:text-[0.625rem]',
+  lg: 'text-[clamp(0.625rem,1.1vw,0.875rem)]',
+}[size];
+
+const toneClass = tone === 'ocean' ? 'text-ocean' : 'text-limestone';
+const subToneClass = tone === 'ocean' ? 'text-graphite/70' : 'text-limestone/70';
+---
+
+<span class:list={['inline-flex flex-col items-center leading-none', toneClass, className]}>
+  <span class:list={['font-display font-light', nameSize]} style="letter-spacing:0.06em">
+    A<span class="px-[0.12em] align-middle text-[0.72em]">·</span>MAR
+  </span>
+  {
+    subtitle && (
+      <span
+        class:list={['font-sans font-normal uppercase mt-[0.55em]', subSize, subToneClass]}
+        style="letter-spacing:0.46em;text-indent:0.46em"
+      >
+        Yacht Design
+      </span>
+    )
+  }
+  {
+    dot && (
+      <span
+        class:list={[
+          'mt-[0.9em] block size-[0.3em] rounded-full',
+          tone === 'ocean' ? 'bg-ocean' : 'bg-limestone',
+        ]}
+        style="min-width:5px;min-height:5px"
+        aria-hidden="true"
+      />
+    )
+  }
+</span>
