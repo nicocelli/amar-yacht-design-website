@@ -1,0 +1,71 @@
+---
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import { Image } from 'astro:assets';
+import interior from '../../assets/hero-colecao-2-interior.jpg';
+import { blogCategories, publishedPosts, formatDate } from '../../lib/blog';
+
+const posts = await publishedPosts();
+---
+<Base title="Blog | Interiores náuticos e refit — A·MAR Yacht Design" description="Olhares sobre a vida a bordo. Conteúdos da A·MAR sobre interiores náuticos, refit, materiais, revestimentos e novidades do mercado.">
+  <Nav />
+  <main id="conteudo" class="pt-28 md:pt-36">
+    <section class="wrap pb-16 pt-8 lg:pb-24 lg:pt-12" aria-labelledby="blog-title">
+      <a href="/" class="eyebrow underline underline-offset-4 hover:text-ocean">Início</a>
+      <div class="mt-10 grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
+        <div class="lg:col-span-7">
+          <p class="eyebrow">Blog A·MAR</p>
+          <h1 id="blog-title" class="display-lg mt-6 max-w-[18ch]">Olhares sobre a vida a bordo.</h1>
+          <p class="lede mt-7 max-w-[40ch]">Ideias e escolhas para transformar a experiência de viver o barco.</p>
+          <p class="mt-6 max-w-[52ch] text-graphite/85">Interiores náuticos, refit, materiais e novidades do setor, com um olhar atento ao conforto, à funcionalidade e à identidade de cada embarcação.</p>
+        </div>
+        <figure class="lg:col-span-5">
+          <Image src={interior} alt="Detalhes de um interior de embarcação com tecidos claros e marcenaria em madeira." widths={[480, 720, 1040]} sizes="(min-width: 1024px) 36vw, 90vw" class="aspect-[4/3] w-full rounded-media object-cover" />
+          <figcaption class="mt-3 text-xs text-ink-muted">Imagem de ambientação.</figcaption>
+        </figure>
+      </div>
+    </section>
+    <section class="bg-sand/55" aria-labelledby="temas-title">
+      <div class="wrap py-12 md:py-16">
+        <h2 id="temas-title" class="eyebrow">Os temas do nosso olhar</h2>
+        <div class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          {blogCategories.map((category) => (
+            <div class="border-t border-taupe/50 pt-5">
+              <h3 class="font-display text-2xl">{category.title}</h3>
+              <p class="mt-3 text-sm text-graphite/80">{category.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+    <section class="wrap py-16 md:py-24" aria-labelledby="artigos-title">
+      <p class="eyebrow">Leituras A·MAR</p>
+      <h2 id="artigos-title" class="display-md mt-4">Para pensar o seu próximo momento a bordo.</h2>
+      {posts.length ? (
+        <div class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {posts.map((post) => (
+            <article class="flex flex-col rounded-card border border-taupe/50 p-7">
+              <p class="eyebrow">{post.data.category}</p>
+              <h3 class="display-md mt-5"><a href={`/blog/${post.id}`} class="hover:underline underline-offset-4">{post.data.title}</a></h3>
+              <p class="mt-4 text-sm text-graphite/85">{post.data.description}</p>
+              <time datetime={post.data.publishedAt.toISOString()} class="mt-6 text-xs text-ink-muted">{formatDate(post.data.publishedAt)}</time>
+              <a href={`/blog/${post.id}`} class="mt-6 text-sm text-ocean underline underline-offset-4" aria-label={`Ler artigo: ${post.data.title}`}>Ler artigo →</a>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <div class="mt-10 max-w-3xl rounded-card border border-taupe/50 p-8 md:p-10">
+          <h3 class="font-display text-3xl">Nossas primeiras leituras estão em preparação.</h3>
+          <p class="mt-4 max-w-[54ch] text-graphite/85">Em breve, este espaço reunirá orientações e referências para ajudar você a fazer escolhas mais conscientes para a sua embarcação.</p>
+        </div>
+      )}
+      <div class="mt-16 border-t border-taupe/40 pt-10">
+        <h2 class="display-md">Uma ideia para o seu barco?</h2>
+        <p class="mt-4 max-w-[54ch]">Conte como você vive a bordo e o que gostaria de transformar.</p>
+        <a href="/#contato" class="mt-7 inline-block rounded-full bg-ocean px-7 py-4 text-xs uppercase tracking-[0.15em] text-limestone hover:bg-ocean-deep">Converse com a A·MAR</a>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Base>

@@ -1,0 +1,67 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import { publishedPosts, formatDate } from '../../lib/blog';
+import { SITE_URL } from '../../data/site';
+
+export async function getStaticPaths() {
+  return (await publishedPosts()).map((post) => ({ params: { id: post.id }, props: { post } }));
+}
+interface Props { post: CollectionEntry<'blog'> }
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+const articleSchema = {
+  '@context': 'https://schema.org', '@type': 'BlogPosting',
+  headline: post.data.title, description: post.data.description,
+  datePublished: post.data.publishedAt.toISOString(),
+  dateModified: (post.data.updatedAt ?? post.data.publishedAt).toISOString(),
+  author: { '@type': 'Person', name: post.data.author },
+  publisher: { '@type': 'Organization', name: 'A·MAR Yacht Design', url: SITE_URL },
+  mainEntityOfPage: `${SITE_URL}/blog/${post.id}`,
+};
+---
+<Base title={`${post.data.title} | Blog A·MAR`} description={post.data.description}>
+  <Nav />
+  <main id="conteudo" class="wrap pb-20 pt-36 md:pt-44">
+    <article class="mx-auto max-w-3xl">
+      <a href="/blog" class="eyebrow underline underline-offset-4">← Voltar ao blog</a>
+      <header class="mt-10 border-b border-taupe/40 pb-10">
+        <p class="eyebrow">{post.data.category}</p>
+        <h1 class="display-lg mt-5">{post.data.title}</h1>
+        <p class="lede mt-6">{post.data.description}</p>
+        <p class="mt-6 text-sm text-ink-muted">Por {post.data.author} · <time datetime={post.data.publishedAt.toISOString()}>{formatDate(post.data.publishedAt)}</time></p>
+        {post.data.updatedAt && <p class="mt-2 text-sm text-ink-muted">Atualizado em {formatDate(post.data.updatedAt)}</p>}
+      </header>
+      {headings.some((heading) => heading.depth === 2) && (
+        <nav aria-label="Neste artigo" class="mt-10 rounded-card bg-sand/55 p-6">
+          <p class="eyebrow">Neste artigo</p>
+          <ul class="mt-4 space-y-2">{headings.filter((heading) => heading.depth === 2).map((heading) => <li><a href={`#${heading.slug}`} class="text-sm underline underline-offset-4">{heading.text}</a></li>)}</ul>
+        </nav>
+      )}
+      <div class="article-body mt-10"><Content /></div>
+      <aside class="mt-14 rounded-card bg-sand/55 p-8">
+        <h2 class="display-md">Vamos pensar no seu barco?</h2>
+        <p class="mt-4">Converse com a A·MAR sobre as possibilidades para os seus interiores.</p>
+        <a href="/#contato" class="mt-5 inline-block text-ocean underline underline-offset-4">Iniciar uma conversa →</a>
+      </aside>
+    </article>
+    <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} is:inline />
+  </main>
+  <Footer />
+</Base>
+<style>
+  .article-body { line-height: 1.85; overflow-wrap: anywhere; }
+  .article-body :global(p), .article-body :global(ul), .article-body :global(ol) { margin-block: 1.25rem; }
+  .article-body :global(h2) { margin-top: 2.75rem; font-size: clamp(1.8rem, 3vw, 2.5rem); }
+  .article-body :global(h3) { margin-top: 2rem; font-size: 1.7rem; }
+  .article-body :global(a) { color: var(--color-ocean); text-decoration: underline; text-underline-offset: 4px; }
+  .article-body :global(ul) { list-style: disc; padding-left: 1.5rem; }
+  .article-body :global(ol) { list-style: decimal; padding-left: 1.5rem; }
+  .article-body :global(li) { margin-block: .5rem; }
+  .article-body :global(img) { border-radius: var(--radius-media); }
+  .article-body :global(blockquote) { border-left: 2px solid var(--color-oak); padding-left: 1.5rem; }
+  .article-body :global(table) { display: block; overflow-x: auto; border-collapse: collapse; }
+  .article-body :global(td), .article-body :global(th) { border: 1px solid var(--color-taupe); padding: .75rem; }
+</style>

@@ -35,6 +35,7 @@ export const nav = [
   { label: 'Refit', href: '#refit' },
   { label: 'Antes e depois', href: '#antes-depois' },
   { label: 'Método', href: '#metodo' },
+  { label: 'Blog', href: '/blog' },
   // Parcerias fora do ar por ora; devolver esta linha reativa o link.
   // { label: 'Parcerias', href: '#parcerias' },
 ] as const;

@@ -2,6 +2,9 @@
 import Wordmark from './Wordmark.astro';
 import { nav, contact } from '../data/site';
 
+const homeHref = (href: string) => href.startsWith('#') && Astro.url.pathname !== '/' ? `/${href}` : href;
+const isBlog = Astro.url.pathname === '/blog' || Astro.url.pathname.startsWith('/blog/');
+
 const waHref = `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(
   'Olá! Vim pelo site da A·MAR e gostaria de conversar sobre um projeto.',
 )}`;
@@ -12,18 +15,19 @@ const waHref = `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(
   class="fixed inset-x-0 top-0 z-50 border-b border-transparent bg-limestone transition-[border-color,box-shadow] duration-500 data-[stuck]:border-taupe/40"
 >
   <div class="wrap flex items-center justify-between gap-6 py-4 md:py-5">
-    <a href="#topo" aria-label="A·MAR Yacht Design, ir para o início" class="shrink-0">
+    <a href={homeHref("#topo")} aria-label="A·MAR Yacht Design, ir para o início" class="shrink-0">
       <Wordmark size="sm" />
     </a>
 
     <nav aria-label="Navegação principal" class="hidden lg:block">
-      <ul class="flex items-center gap-8 xl:gap-10">
+      <ul class="flex items-center gap-5 xl:gap-8">
         {
           nav.map((item) => (
             <li>
               <a
-                href={item.href}
-                data-secao={item.href.slice(1)}
+                href={homeHref(item.href)}
+                data-secao={item.href.startsWith('#') ? item.href.slice(1) : undefined}
+                aria-current={item.href === '/blog' && isBlog ? 'page' : undefined}
                 class="nav-link font-sans text-[0.8125rem] text-graphite/80 transition-colors duration-300 hover:text-ocean"
               >
                 {item.label}
@@ -36,7 +40,7 @@ const waHref = `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(
 
     <div class="flex items-center gap-3">
       <a
-        href="#contato"
+        href={homeHref("#contato")}
         class="hidden rounded-full border border-ocean px-5 py-3 font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-ocean transition-colors duration-300 hover:bg-ocean hover:text-limestone sm:inline-block"
       >
         Iniciar um projeto
@@ -82,9 +86,11 @@ const waHref = `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(
       transform-origin: left center;
       transition: transform 450ms cubic-bezier(0.16, 1, 0.3, 1);
     }
+    .nav-link[aria-current="page"],
     .nav-link[data-ativo] {
       color: var(--color-ocean);
     }
+    .nav-link[aria-current="page"]::after,
     .nav-link[data-ativo]::after {
       transform: scaleX(1);
     }
@@ -121,9 +127,10 @@ const waHref = `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(
         nav.map((item) => (
           <li class="border-b border-taupe/25 last:border-0">
             <a
-              href={item.href}
+              href={homeHref(item.href)}
               data-nav-link
-              data-secao={item.href.slice(1)}
+              data-secao={item.href.startsWith('#') ? item.href.slice(1) : undefined}
+                aria-current={item.href === '/blog' && isBlog ? 'page' : undefined}
               class="nav-link-mobile flex items-center gap-3 py-4 font-display text-2xl font-light text-ocean"
             >
               <span class="ponto-secao block size-1 shrink-0 rounded-full bg-ocean" aria-hidden="true"></span>
@@ -134,7 +141,7 @@ const waHref = `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(
       }
       <li class="pt-5 pb-4">
         <a
-          href="#contato"
+          href={homeHref("#contato")}
           data-nav-link
           class="inline-block rounded-full border border-ocean px-6 py-3.5 font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-ocean"
         >
