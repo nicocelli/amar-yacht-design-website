@@ -4,7 +4,7 @@ description: "Entenda o que é refit de lancha, quando vale a pena renovar o int
 publishedAt: 2026-11-14
 category: "Refit e interiores"
 author: "Jessica Zancanella"
-draft: true
+draft: false
 ---
 
 ![Salão da lancha Phantom 500 HT com sofá off-white, almofadas e manta terracota, após projeto de refit parcial da A·MAR Yacht Design](/blog/refit-de-lancha-salao.webp)
