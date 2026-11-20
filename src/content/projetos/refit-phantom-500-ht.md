@@ -13,6 +13,8 @@ artigo: "refit-de-lancha"
 draft: true
 ---
 
+> **Estudo de caso conceitual.** Este projeto foi desenvolvido pela A·MAR para mostrar o nosso processo de refit. As imagens de "depois" e o moodboard são simulações do projeto.
+
 ## O ponto de partida
 
 A lancha estava em bom estado, mas os ambientes internos pareciam escuros e datados, com muita madeira em tom forte e pouca luz. O pedido era renovar sem obras estruturais: deixar o interior mais claro, aconchegante e atual, mantendo a essência náutica.
@@ -44,5 +46,3 @@ Uma base clara e neutra, em off-white e areia, para ampliar a sensação de espa
 ## O resultado
 
 Um refit parcial, bem planejado, já transforma a sensação de estar a bordo sem reformar o barco inteiro.
-
-*Estudo de caso conceitual da A·MAR Yacht Design. As imagens de "depois" e o moodboard são simulações do projeto.*

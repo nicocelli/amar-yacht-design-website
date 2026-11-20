@@ -3,7 +3,7 @@ export const SITE_URL = 'https://amaryacht.design';
 export const brand = {
   name: 'A·MAR Yacht Design',
   shortName: 'A·MAR',
-  line: 'Interiores · Refit · Layout',
+  line: 'Interiores · Refit · Personalização',
   /** Linha de posicionamento da apresentação oficial. */
   tagline: 'Projetamos espaços a bordo que unem estética, funcionalidade e experiência.',
   /**

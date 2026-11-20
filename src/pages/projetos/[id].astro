@@ -45,6 +45,9 @@ const schema = {
           <p class="eyebrow">{d.tipo}</p>
           <h1 class="display-lg mt-5">{d.title}</h1>
           <p class="lede mt-6 max-w-[48ch]">{d.description}</p>
+          {d.natureza !== 'Projeto executado' && (
+            <p class="mt-6 inline-block rounded-full border border-taupe/70 px-4 py-1.5 text-xs uppercase tracking-[0.15em] text-ink-muted">{d.natureza}</p>
+          )}
         </div>
         <dl class="self-end border-t border-taupe/50 lg:col-span-5">
           {ficha.map((item) => (
@@ -87,5 +90,7 @@ const schema = {
   .project-body :global(ul) { list-style: disc; padding-left: 1.5rem; }
   .project-body :global(li) { margin-block: .5rem; }
   .project-body :global(img) { border-radius: var(--radius-media); margin-block: 2rem .5rem; width: 100%; }
+  .project-body :global(blockquote) { border-left: 2px solid var(--color-oak); padding: .25rem 0 .25rem 1.5rem; color: var(--color-ink-muted); font-size: .9375rem; }
+  .project-body :global(blockquote strong) { color: var(--color-graphite); }
   .project-body :global(em) { color: var(--color-ink-muted); font-size: .875rem; }
 </style>
