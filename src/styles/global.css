@@ -240,3 +240,204 @@
     }
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Luz do dia — só o topo da página inicial
+   O período (manha, tarde, noite) é marcado em <html data-hora> antes da
+   primeira pintura (Base.astro) e atualizado a cada minuto (Hero.astro).
+   O resto do site mantém a alternância de tons de sempre.
+--------------------------------------------------------------------------- */
+html[data-hora='manha'] .hero-dia {
+  --h-bg: var(--color-limestone);
+  --h-bg2: var(--color-limestone);
+  --h-titulo: var(--color-ocean);
+  --h-texto: var(--color-graphite);
+  --h-suave: var(--color-ink-muted);
+  --h-filete: color-mix(in oklab, var(--color-taupe) 45%, transparent);
+  --h-luz1: rgb(255 255 255 / 0.95);
+  --h-luz2: rgb(143 160 142 / 0.3);
+  --h-luz3: rgb(231 225 214 / 0.9);
+  --h-onda1: rgb(143 160 142 / 0.38);
+  --h-onda2: rgb(185 178 166 / 0.32);
+  --h-onda3: rgb(14 42 61 / 0.1);
+  --h-botao: var(--color-ocean);
+  --h-botao-texto: var(--color-limestone);
+}
+html[data-hora='tarde'] .hero-dia {
+  --h-bg: #efe7da;
+  --h-bg2: var(--color-limestone);
+  --h-titulo: var(--color-ocean);
+  --h-texto: var(--color-graphite);
+  --h-suave: var(--color-ink-muted);
+  --h-filete: color-mix(in oklab, var(--color-taupe) 55%, transparent);
+  --h-luz1: rgb(246 244 239 / 0.95);
+  --h-luz2: rgb(210 196 172 / 0.75);
+  --h-luz3: rgb(210 196 172 / 0.55);
+  --h-onda1: rgb(210 196 172 / 0.75);
+  --h-onda2: rgb(185 178 166 / 0.45);
+  --h-onda3: rgb(14 42 61 / 0.1);
+  --h-botao: var(--color-ocean);
+  --h-botao-texto: var(--color-limestone);
+}
+html[data-hora='noite'] .hero-dia {
+  --h-bg: var(--color-ocean);
+  --h-bg2: var(--color-ocean-deep);
+  --h-titulo: var(--color-limestone);
+  --h-texto: rgb(246 244 239 / 0.86);
+  --h-suave: rgb(246 244 239 / 0.62);
+  --h-filete: rgb(246 244 239 / 0.16);
+  --h-luz1: rgb(143 160 142 / 0.22);
+  --h-luz2: rgb(246 244 239 / 0.08);
+  --h-luz3: rgb(143 160 142 / 0.14);
+  /* a onda da frente puxa para o azul profundo, para a faixa de baixo não ficar acinzentada */
+  --h-onda1: rgb(8 28 42 / 0.6);
+  --h-onda2: rgb(143 160 142 / 0.24);
+  --h-onda3: rgb(246 244 239 / 0.07);
+  --h-botao: var(--color-limestone);
+  --h-botao-texto: var(--color-ocean);
+}
+
+.hero-dia {
+  --luz-t: 2.4s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(180deg, var(--h-bg2, var(--color-limestone)) 0%, var(--h-bg, var(--color-limestone)) 60%);
+  color: var(--h-texto, var(--color-graphite));
+}
+.hero-dia h1,
+.hero-dia .lede {
+  color: var(--h-titulo, var(--color-ocean));
+  transition: color var(--luz-t);
+}
+.hero-dia .eyebrow {
+  color: var(--h-suave, var(--color-ink-muted));
+}
+.hero-dia a.bg-ocean {
+  background-color: var(--h-botao, var(--color-ocean));
+  color: var(--h-botao-texto, var(--color-limestone));
+  transition: background-color var(--luz-t), color var(--luz-t);
+}
+.hero-dia a.text-ocean {
+  color: var(--h-titulo, var(--color-ocean));
+}
+.hero-dia .hero-rodape {
+  border-color: var(--h-filete);
+}
+.hero-dia .pilha-carta {
+  outline-color: var(--h-bg, var(--color-limestone));
+}
+
+.hero-saudacao {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+html:not([data-hora]) .hero-saudacao {
+  display: none;
+}
+html[data-hora='manha'] .hero-saudacao-texto::before { content: 'Bom dia'; }
+html[data-hora='tarde'] .hero-saudacao-texto::before { content: 'Boa tarde'; }
+html[data-hora='noite'] .hero-saudacao-texto::before { content: 'Boa noite'; }
+.hero-dia a.bg-ocean:hover {
+  opacity: 0.88;
+}
+.hero-saudacao i {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--h-titulo, var(--color-ocean));
+  animation: hero-pulso 10s ease-in-out infinite;
+}
+@keyframes hero-pulso {
+  0%,
+  100% {
+    transform: scale(0.7);
+    opacity: 0.35;
+  }
+  50% {
+    transform: scale(1.25);
+    opacity: 0.8;
+  }
+}
+
+.hero-reflexos {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.hero-reflexos span {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(48px);
+  will-change: transform;
+}
+.hero-reflexos span:nth-child(1) {
+  width: 46vmax;
+  height: 30vmax;
+  left: -8vmax;
+  top: -6vmax;
+  background: var(--h-luz1, transparent);
+  animation: hero-deriva-1 26s ease-in-out infinite alternate;
+}
+.hero-reflexos span:nth-child(2) {
+  width: 38vmax;
+  height: 26vmax;
+  right: -10vmax;
+  top: 18%;
+  background: var(--h-luz2, transparent);
+  animation: hero-deriva-2 32s ease-in-out infinite alternate;
+}
+.hero-reflexos span:nth-child(3) {
+  width: 42vmax;
+  height: 22vmax;
+  left: 24%;
+  bottom: 6%;
+  background: var(--h-luz3, transparent);
+  animation: hero-deriva-3 38s ease-in-out infinite alternate;
+}
+@keyframes hero-deriva-1 {
+  to { transform: translate(9vmax, 6vmax) scale(1.12); }
+}
+@keyframes hero-deriva-2 {
+  to { transform: translate(-11vmax, 7vmax) scale(0.9); }
+}
+@keyframes hero-deriva-3 {
+  to { transform: translate(-8vmax, -6vmax) scale(1.15); }
+}
+
+.hero-horizonte {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: min(26vh, 220px);
+  pointer-events: none;
+}
+.hero-horizonte svg {
+  width: 100%;
+  height: 100%;
+}
+.hero-horizonte [data-onda='1'] { fill: var(--h-onda1, transparent); }
+.hero-horizonte [data-onda='2'] { fill: var(--h-onda2, transparent); }
+.hero-horizonte [data-onda='3'] { fill: var(--h-onda3, transparent); }
+
+/* À noite, a barra do topo acompanha o azul enquanto está sobre a abertura;
+   ao rolar ela volta ao claro de sempre. */
+#site-nav[data-home] {
+  transition:
+    background-color 600ms ease,
+    border-color 500ms ease,
+    box-shadow 500ms ease;
+}
+html[data-hora='noite'] #site-nav[data-home]:not([data-stuck]) {
+  background-color: var(--color-ocean-deep);
+}
+html[data-hora='noite'] #site-nav[data-home]:not([data-stuck]) :is(.text-ocean, .nav-link, #nav-toggle) {
+  color: var(--color-limestone);
+}
+html[data-hora='noite'] #site-nav[data-home]:not([data-stuck]) .nav-link {
+  opacity: 0.8;
+}
+html[data-hora='noite'] #site-nav[data-home]:not([data-stuck]) .border-ocean {
+  border-color: rgb(246 244 239 / 0.6);
+}
+html[data-hora='noite'] #site-nav[data-home]:not([data-stuck]) .marca-selo {
+  background: var(--color-limestone);
+}

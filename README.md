@@ -155,6 +155,23 @@ entra só onde tem função — provar o refit e ambientar a abertura.
 Não há mais slots vazios. O `<PhotoSlot>` segue disponível para áreas novas: sem `src`,
 ele desenha um campo de cor da paleta com a legenda do enquadramento desejado.
 
+## Luz do dia na abertura
+
+O topo da página inicial muda de tom conforme a hora local de quem visita: **manhã**
+(5h–12h) clara, **tarde** (12h–18h) quente em areia e carvalho, **noite** (18h–5h) em
+azul-marinho com texto claro. Só o topo muda; o resto do site mantém a alternância de
+tons de sempre. Junto mudam a saudação ("Bom dia", "Boa tarde", "Boa noite") e a foto
+da frente da pilha (campo `hora` em `colecao`, `sections/Hero.astro`).
+
+O período é marcado em `<html data-hora>` por um script inline no `<head>` (`Base.astro`),
+antes da primeira pintura, então a página nunca pisca na cor errada. As cores de cada
+período ficam no fim de `src/styles/global.css` (bloco "Luz do dia").
+
+O horizonte "respira": três ondas em SVG sobem e descem num ciclo de 10 s (cerca de 6
+por minuto, o ritmo de uma respiração calma), e reflexos de luz derivam devagar atrás
+do texto. A animação só roda com o topo na tela; com `prefers-reduced-motion`, tudo fica
+parado e só a cor muda.
+
 ## Assinatura de marca
 
 `Assinatura.astro` fecha a narrativa do método. A seção é alta e o conteúdo fica

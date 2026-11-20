@@ -110,6 +110,11 @@ const jsonLd = {
       // Marca que o JS está ativo antes da primeira pintura, para que .reveal só
       // esconda conteúdo quando houver quem o revele depois.
       document.documentElement.classList.add('js');
+      // Luz do dia: o topo da página inicial muda de tom conforme a hora local.
+      (function () {
+        var h = new Date().getHours();
+        document.documentElement.dataset.hora = h >= 5 && h < 12 ? 'manha' : h < 18 && h >= 12 ? 'tarde' : 'noite';
+      })();
     </script>
   </head>
 

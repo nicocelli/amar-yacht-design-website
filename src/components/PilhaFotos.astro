@@ -12,7 +12,8 @@ import type { ImageMetadata } from 'astro';
  * teclado, e é ele que carrega o rótulo para leitor de tela.
  */
 interface Props {
-  fotos: { src: ImageMetadata; alt: string }[];
+  /** `hora` (manha, tarde, noite) faz a foto abrir na frente naquele período. */
+  fotos: { src: ImageMetadata; alt: string; hora?: 'manha' | 'tarde' | 'noite' }[];
   class?: string;
 }
 
@@ -27,6 +28,7 @@ const { fotos, class: className = '' } = Astro.props;
           class="pilha-carta absolute inset-[4%] overflow-hidden rounded-media bg-sand shadow-[0_14px_40px_-22px_rgba(14,42,61,0.38)]"
           data-carta
           data-pos={i}
+          data-hora={foto.hora}
         >
           <Image
             src={foto.src}
@@ -176,7 +178,8 @@ const { fotos, class: className = '' } = Astro.props;
     const pontos = [...pilha.querySelectorAll<HTMLElement>('.pilha-ponto')];
     if (cartas.length < 2 || !botao) continue;
 
-    let topo = 0;
+    const daHora = cartas.findIndex((c) => c.dataset.hora && c.dataset.hora === document.documentElement.dataset.hora);
+    let topo = daHora > 0 ? daHora : 0;
     let timer: ReturnType<typeof setInterval> | undefined;
 
     const pintar = () => {

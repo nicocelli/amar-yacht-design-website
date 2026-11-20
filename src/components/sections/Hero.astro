@@ -12,19 +12,33 @@ import detalhe from '../../assets/hero-colecao-4-detalhe.jpg';
 const colecao = [
   {
     src: entardecer,
+    hora: 'noite' as const,
     alt: 'Área de estar externa de um iate ao entardecer, com estofaria em tecido claro e vista para águas calmas.',
   },
   {
     src: interior,
+    hora: 'manha' as const,
     alt: 'Interior de embarcação com almofadas em linho, marcenaria em madeira e vista para a marina.',
   },
   { src: aerea, alt: 'Vista aérea de um veleiro fundeado sobre água escura e calma.' },
-  { src: detalhe, alt: 'Detalhe de cabos náuticos sobre convés de teca em luz de fim de tarde.' },
+  { src: detalhe, hora: 'tarde' as const, alt: 'Detalhe de cabos náuticos sobre convés de teca em luz de fim de tarde.' },
 ];
 ---
 
-<section id="topo" class="relative flex min-h-svh flex-col">
-  <div class="wrap flex flex-1 flex-col justify-center pt-28 pb-16 lg:pt-14 lg:pb-32">
+<section id="topo" class="hero-dia relative flex min-h-svh flex-col overflow-hidden">
+  {/* Reflexos da água, como no teto de uma cabine: manchas de luz que derivam devagar. */}
+  <div class="hero-reflexos" aria-hidden="true"><span></span><span></span><span></span></div>
+
+  {/* Horizonte que respira: ~6 ciclos por minuto, o ritmo de uma respiração calma. */}
+  <div class="hero-horizonte" aria-hidden="true">
+    <svg viewBox="0 0 1440 220" preserveAspectRatio="none">
+      <path data-onda="3"></path>
+      <path data-onda="2"></path>
+      <path data-onda="1"></path>
+    </svg>
+  </div>
+
+  <div class="wrap relative z-10 flex flex-1 flex-col justify-center pt-28 pb-16 lg:pt-14 lg:pb-32">
     {/*
       A pilha é irmã do bloco de texto num flex com items-stretch: em vez de receber
       uma altura fixa, ela herda a do texto. Assim vai exatamente do topo da marca
@@ -32,6 +46,9 @@ const colecao = [
     */}
     <div class="flex flex-col gap-y-14 lg:flex-row lg:items-stretch lg:gap-x-14">
       <div class="lg:flex-1">
+        <p class="hero-saudacao eyebrow mb-7">
+          <i aria-hidden="true"></i><span><span class="hero-saudacao-texto"></span><span class="hidden sm:inline"> · a luz a bordo muda com o dia</span></span>
+        </p>
         <h1
           class="display-lg reveal max-w-[15ch] text-[clamp(2.75rem,6.4vw,5.25rem)]"
           style="--reveal-delay:60ms"
@@ -80,7 +97,7 @@ const colecao = [
     </div>
   </div>
 
-  <div class="wrap hidden items-center justify-between border-t border-taupe/40 py-5 lg:flex">
+  <div class="hero-rodape wrap relative z-10 hidden items-center justify-between border-t border-taupe/40 py-5 lg:flex">
     <p class="eyebrow">{brand.location}</p>
     <a
       href={contact.instagramUrl}
@@ -92,3 +109,60 @@ const colecao = [
     </a>
   </div>
 </section>
+
+<script>
+  const raiz = document.documentElement;
+  type Hora = 'manha' | 'tarde' | 'noite';
+
+  const horaAgora = (): Hora => {
+    const h = new Date().getHours();
+    return h >= 5 && h < 12 ? 'manha' : h >= 12 && h < 18 ? 'tarde' : 'noite';
+  };
+
+  // a saudação vem do CSS, a partir de <html data-hora>
+  const aplicarHora = () => {
+    raiz.dataset.hora = horaAgora();
+  };
+  // quem deixa a página aberta vê a luz mudar na virada do período
+  setInterval(aplicarHora, 60_000);
+
+  /* ---- horizonte que respira ---- */
+  const semMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const hero = document.getElementById('topo');
+  const ondas = [
+    { el: document.querySelector<SVGPathElement>('[data-onda="3"]'), base: 70, amp: 10, len: 900, vel: 0.018, fase: 0 },
+    { el: document.querySelector<SVGPathElement>('[data-onda="2"]'), base: 110, amp: 13, len: 640, vel: -0.026, fase: 2 },
+    { el: document.querySelector<SVGPathElement>('[data-onda="1"]'), base: 150, amp: 9, len: 520, vel: 0.034, fase: 4 },
+  ];
+
+  const desenhar = (t: number) => {
+    // a altura das ondas sobe e desce num ciclo de 10 s
+    const resp = (1 - Math.cos((t / 10_000) * 2 * Math.PI)) / 2;
+    for (const o of ondas) {
+      if (!o.el) continue;
+      const topo = o.base - resp * 14;
+      let d = `M0,220 L0,${topo.toFixed(1)}`;
+      for (let x = 0; x <= 1440; x += 24) {
+        const y = topo + Math.sin((x / o.len) * 2 * Math.PI + o.fase + (t * o.vel) / 100) * o.amp * (0.75 + resp * 0.5);
+        d += ` L${x},${y.toFixed(1)}`;
+      }
+      o.el.setAttribute('d', `${d} L1440,220 Z`);
+    }
+  };
+
+  desenhar(0);
+
+  if (!semMovimento && hero) {
+    let visivel = false;
+    let quadro = 0;
+    const laco = (t: number) => {
+      desenhar(t);
+      quadro = visivel ? requestAnimationFrame(laco) : 0;
+    };
+    // só anima enquanto o topo está na tela
+    new IntersectionObserver(([entrada]) => {
+      visivel = entrada!.isIntersecting;
+      if (visivel && !quadro) quadro = requestAnimationFrame(laco);
+    }).observe(hero);
+  }
+</script>

@@ -13,6 +13,7 @@ const waHref = `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(
 
 <header
   id="site-nav"
+  data-home={Astro.url.pathname === '/' ? '' : undefined}
   class="fixed inset-x-0 top-0 z-50 border-b border-transparent bg-limestone transition-[border-color,box-shadow] duration-500 data-[stuck]:border-taupe/40"
 >
   <div class="wrap flex items-center justify-between gap-6 py-4 md:py-5">
