@@ -3,7 +3,8 @@ import Wordmark from './Wordmark.astro';
 import { nav, contact } from '../data/site';
 
 const homeHref = (href: string) => href.startsWith('#') && Astro.url.pathname !== '/' ? `/${href}` : href;
-const isBlog = Astro.url.pathname === '/blog' || Astro.url.pathname.startsWith('/blog/');
+const path = Astro.url.pathname;
+const isCurrent = (href: string) => href.startsWith('/') && (path === href || path.startsWith(`${href}/`));
 
 const waHref = `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(
   'Olá! Vim pelo site da A·MAR e gostaria de conversar sobre um projeto.',
@@ -27,7 +28,7 @@ const waHref = `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(
               <a
                 href={homeHref(item.href)}
                 data-secao={item.href.startsWith('#') ? item.href.slice(1) : undefined}
-                aria-current={item.href === '/blog' && isBlog ? 'page' : undefined}
+                aria-current={isCurrent(item.href) ? 'page' : undefined}
                 class="nav-link font-sans text-[0.8125rem] text-graphite/80 transition-colors duration-300 hover:text-ocean"
               >
                 {item.label}
@@ -130,7 +131,7 @@ const waHref = `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(
               href={homeHref(item.href)}
               data-nav-link
               data-secao={item.href.startsWith('#') ? item.href.slice(1) : undefined}
-                aria-current={item.href === '/blog' && isBlog ? 'page' : undefined}
+                aria-current={isCurrent(item.href) ? 'page' : undefined}
               class="nav-link-mobile flex items-center gap-3 py-4 font-display text-2xl font-light text-ocean"
             >
               <span class="ponto-secao block size-1 shrink-0 rounded-full bg-ocean" aria-hidden="true"></span>

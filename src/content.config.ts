@@ -15,4 +15,23 @@ const blog = defineCollection({
   }),
 });
 
-export const collections = { blog };
+const projetos = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/projetos' }),
+  schema: z.object({
+    title: z.string().min(1),
+    description: z.string().min(1),
+    embarcacao: z.string().min(1),
+    tipo: z.enum(['Interiores', 'Refit parcial', 'Refit completo', 'Personalização']),
+    natureza: z.enum(['Projeto executado', 'Estudo conceitual', 'Projeto acadêmico']),
+    ano: z.number().int(),
+    local: z.string().optional(),
+    ambientes: z.array(z.string()).default([]),
+    capa: z.string().startsWith('/projetos/'),
+    capaAlt: z.string().min(1),
+    ordem: z.number().default(100),
+    artigo: z.string().optional(),
+    draft: z.boolean().default(true),
+  }),
+});
+
+export const collections = { blog, projetos };
