@@ -1,0 +1,63 @@
+---
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import { publishedProjects } from '../../lib/projetos';
+
+const projetos = await publishedProjects();
+---
+<Base title="Projetos | Interiores náuticos e refit — A·MAR Yacht Design" description="Projetos da A·MAR Yacht Design: interiores, refit e personalização de embarcações, do briefing à proposta final.">
+  <Nav />
+  <main id="conteudo" class="pt-28 md:pt-36">
+    <section class="wrap pb-14 pt-8 lg:pb-20 lg:pt-12" aria-labelledby="projetos-title">
+      <a href="/" class="eyebrow underline underline-offset-4 hover:text-ocean">Início</a>
+      <div class="mt-10 max-w-3xl">
+        <p class="eyebrow">Projetos A·MAR</p>
+        <h1 id="projetos-title" class="display-lg mt-6 max-w-[18ch]">Cada barco, uma forma de viver a bordo.</h1>
+        <p class="lede mt-7 max-w-[44ch]">Interiores, refit e personalização pensados a partir de quem usa a embarcação.</p>
+        <p class="mt-6 max-w-[56ch] text-graphite/85">Em cada projeto mostramos o ponto de partida, o conceito e o que mudou, para que você veja o caminho, e não só o resultado.</p>
+      </div>
+    </section>
+
+    <section class="wrap pb-16 md:pb-24" aria-label="Lista de projetos">
+      {projetos.length ? (
+        <div class="grid gap-x-8 gap-y-14 md:grid-cols-2">
+          {projetos.map((projeto, i) => (
+            <article class:list={['group flex flex-col', i === 0 && projetos.length > 1 && 'md:col-span-2']}>
+              <a href={`/projetos/${projeto.id}`} class="block overflow-hidden rounded-media" tabindex="-1" aria-hidden="true">
+                <img
+                  src={projeto.data.capa}
+                  alt=""
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                  decoding="async"
+                  class:list={['w-full object-cover transition-transform duration-700 group-hover:scale-[1.02] motion-reduce:transition-none', i === 0 && projetos.length > 1 ? 'aspect-[16/9]' : 'aspect-[4/3]']}
+                />
+              </a>
+              <p class="eyebrow mt-6">{projeto.data.tipo} · {projeto.data.ano}</p>
+              <h2 class="display-md mt-3">
+                <a href={`/projetos/${projeto.id}`} class="hover:underline underline-offset-4">{projeto.data.title}</a>
+              </h2>
+              <p class="mt-2 text-sm text-ink-muted">{projeto.data.embarcacao}{projeto.data.local && ` · ${projeto.data.local}`}</p>
+              <p class="mt-4 max-w-[56ch] text-graphite/85">{projeto.data.description}</p>
+              {projeto.data.natureza !== 'Projeto executado' && (
+                <p class="mt-4 text-xs text-ink-muted">{projeto.data.natureza}</p>
+              )}
+            </article>
+          ))}
+        </div>
+      ) : (
+        <div class="max-w-3xl rounded-card border border-taupe/50 p-8 md:p-10">
+          <h2 class="font-display text-3xl">Nossos primeiros projetos estão sendo organizados.</h2>
+          <p class="mt-4 max-w-[54ch] text-graphite/85">Em breve, este espaço reunirá os interiores e refits da A·MAR, com o antes, o conceito e o resultado de cada um.</p>
+        </div>
+      )}
+
+      <div class="mt-20 border-t border-taupe/40 pt-10">
+        <h2 class="display-md">Vamos pensar no seu barco?</h2>
+        <p class="mt-4 max-w-[54ch]">Conte como você vive a bordo e o que gostaria de transformar.</p>
+        <a href="/#contato" class="mt-7 inline-block rounded-full bg-ocean px-7 py-4 text-xs uppercase tracking-[0.15em] text-limestone hover:bg-ocean-deep">Converse com a A·MAR</a>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Base>

@@ -1,7 +1,7 @@
 # A·MAR Yacht Design — site
 
 Site institucional da **A·MAR Yacht Design**, estúdio de design de interiores náuticos, refit e
-layout de embarcações (Jessica Zancanella — Santa Catarina, Brasil).
+personalização de embarcações (Jessica Zancanella — Santa Catarina, Brasil).
 
 Página única em português, 100% estática, hospedada em **Cloudflare Workers**.
 

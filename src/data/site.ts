@@ -3,7 +3,7 @@ export const SITE_URL = 'https://amaryacht.design';
 export const brand = {
   name: 'A·MAR Yacht Design',
   shortName: 'A·MAR',
-  line: 'Interiores · Refit · Layout',
+  line: 'Interiores · Refit · Personalização',
   /** Linha de posicionamento da apresentação oficial. */
   tagline: 'Projetamos espaços a bordo que unem estética, funcionalidade e experiência.',
   /**
@@ -35,6 +35,7 @@ export const nav = [
   { label: 'Refit', href: '#refit' },
   { label: 'Antes e depois', href: '#antes-depois' },
   { label: 'Método', href: '#metodo' },
+  { label: 'Projetos', href: '/projetos' },
   { label: 'Blog', href: '/blog' },
   // Parcerias fora do ar por ora; devolver esta linha reativa o link.
   // { label: 'Parcerias', href: '#parcerias' },
