@@ -10,7 +10,7 @@ capa: "/projetos/phantom-500-ht-salao.webp"
 capaAlt: "Salão da Phantom 500 HT com sofá off-white, almofadas e manta terracota, na proposta de refit parcial da A·MAR"
 ordem: 1
 artigo: "refit-de-lancha"
-draft: true
+draft: false
 ---
 
 > **Estudo de caso conceitual.** Este projeto foi desenvolvido pela A·MAR para mostrar o nosso processo de refit. As imagens de "depois" e o moodboard são simulações do projeto.
